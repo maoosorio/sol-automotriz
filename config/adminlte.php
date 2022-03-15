@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Base',
+    'title' => 'JSOL Automotriz',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => '<b>Base</b>',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => '<b>JSOL</b> Automotriz',
+    'logo_img' => 'vendor/adminlte/dist/img/logo-app.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Base',
+    'logo_img_alt' => 'SOL Automotriz',
 
     /*
     |--------------------------------------------------------------------------
@@ -102,12 +102,12 @@ return [
     |
     */
 
-    'classes_auth_card' => 'card-outline card-primary',
+    'classes_auth_card' => 'bg-gradient-dark',
     'classes_auth_header' => '',
-    'classes_auth_body' => '',
+    'classes_auth_body' => 'bg-gradient-dark',
     'classes_auth_footer' => '',
-    'classes_auth_icon' => '',
-    'classes_auth_btn' => 'btn-flat btn-primary',
+    'classes_auth_icon' => 'fa-fw text-light',
+    'classes_auth_btn' => 'btn-flat btn-light',
 
     /*
     |--------------------------------------------------------------------------
@@ -191,9 +191,12 @@ return [
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => 'register',
-    'password_reset_url' => 'password/reset',
-    'password_email_url' => 'password/email',
+    'register_url' => false,
+    'password_reset_url' => false,
+    'password_email_url' => false,
+    // 'register_url' => 'register',
+    // 'password_reset_url' => 'password/reset',
+    // 'password_email_url' => 'password/email',
     'profile_url' => false,
 
     /*
@@ -236,7 +239,7 @@ return [
         //     'topnav_right' => true,
         // ],
 
-        // // Sidebar items:
+        //  Sidebar items:
         // [
         //     'type' => 'sidebar-menu-search',
         //     'text' => 'search',
@@ -320,13 +323,48 @@ return [
         // ],
         ['text'        => 'Usuarios',
         'url'         => 'usuarios',
-        'icon'        => 'fa fa-fw fa-users'],
+        'icon'        => 'fa fa-fw fa-users',
+        'can'  => 'ver-usuario'],
 
         ['text'        => 'Roles',
         'url'         => 'roles',
-        'icon'        => 'fa fa-fw fa-user-lock'],
-    ],
+        'icon'        => 'fa fa-fw fa-user-lock',
+        'can'  => 'ver-rol'],
 
+        ['text'        => 'Técnicos',
+        'url'         => 'tecnicos',
+        'icon'        => 'fas fa-fw fa-hard-hat',
+        'can'  => 'ver-tecnico'],
+
+        ['text'        => 'Vehículos',
+        'url'         => 'vehiculos',
+        'icon'        => 'fas fa-fw fa-car',
+        'can'  => 'ver-vehiculo'],
+
+        ['text'        => 'Actividades',
+        'url'         => 'actividades',
+        'icon'        => 'fas fa-fw fa-tasks',
+        'can'  => 'ver-actividad'],
+
+        ['text'    => 'Reportes',
+        'icon'        => 'fas fa-fw fa-calendar-day',
+        'can'  => 'ver-reporte',
+        'submenu' => [
+                [
+                    'text' => 'Vehículos',
+                    'icon'        => 'fas fa-fw fa-car',
+                    'url'  => 'reporteVehiculo',
+                ],
+                [
+                    'text' => 'Técnicos',
+                    'icon'        => 'fas fa-fw fa-hard-hat',
+                    'url'  => 'reporteTecnico',
+                ],
+
+            ],
+        ],
+
+    ],
     /*
     |--------------------------------------------------------------------------
     | Menu Filters
@@ -363,21 +401,21 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
                 ],
             ],

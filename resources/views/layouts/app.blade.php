@@ -84,7 +84,7 @@
 
 @extends('adminlte::page')
 
-@section('title', 'SOL Automotriz')
+@section('title', 'JSOL Automotriz')
 
 {{-- @section('content_header')
 

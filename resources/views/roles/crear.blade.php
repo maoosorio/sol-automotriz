@@ -35,7 +35,10 @@
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="">Permisos para este Rol:</label>
-                                    <br/>
+                                </div>
+                            </div>
+                            <div id="rol" class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
                                     @foreach($permission as $value)
                                         <label>{{ Form::checkbox('permission[]', $value->id, false, array('class' => 'name')) }}
                                         {{ $value->name }}</label>
@@ -52,4 +55,27 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('css')
+<style>
+#rol {
+    columns: 3;
+  }
+  @media (min-width: 400px) {
+    #rol {
+      columns: 1;
+    }
+  }
+  @media (min-width: 768px) {
+    #rol {
+      columns: 2;
+    }
+  }
+  @media (min-width: 900px) {
+    #rol {
+      columns: 4;
+    }
+  }
+</style>
 @endsection

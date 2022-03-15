@@ -12,14 +12,14 @@
                         <div class="card-body">
 
                         @can('crear-rol')
-                        <a class="btn btn-warning" href="{{ route('roles.create') }}">Nuevo</a>
+                        <a class="btn btn-success mb-2" href="{{ route('roles.create') }}"><i class="fas fa-plus"></i></a>
                         @endcan
 
 
-                            <table class="table table-striped mt-2">
-                                <thead style="background-color:#6777ef">
-                                    <th style="color:#fff;">Rol</th>
-                                    <th style="color:#fff;">Acciones</th>
+                            <table id="roles" class="table table-responsive-sm table-striped table-bordered mt-2">
+                                <thead>
+                                    <th>Rol</th>
+                                    <th>Acciones</th>
                                 </thead>
                                 <tbody>
                                 @foreach ($roles as $role)
@@ -27,12 +27,12 @@
                                     <td>{{ $role->name }}</td>
                                     <td>
                                         @can('editar-rol')
-                                            <a class="btn btn-primary" href="{{ route('roles.edit',$role->id) }}">Editar</a>
+                                            <a class="btn btn-warning" href="{{ route('roles.edit',$role->id) }}"><i class="fas fa-edit"></i></a>
                                         @endcan
 
                                         @can('borrar-rol')
                                             {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
-                                                {!! Form::submit('Borrar', ['class' => 'btn btn-danger']) !!}
+                                            {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger'] )  }}
                                             {!! Form::close() !!}
                                         @endcan
                                     </td>
@@ -40,15 +40,44 @@
                                 @endforeach
                                 </tbody>
                             </table>
-
-                            <!-- Centramos la paginacion a la derecha -->
-                            <div class="pagination justify-content-end">
-                                {!! $roles->links() !!}
-                            </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+@endsection
+
+@section('js')
+    <script>
+        $(function() {
+            $("#roles").DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "lengthMenu": [5, 10, 25, 50],
+                language: {
+                    "processing": "Procesando...",
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "zeroRecords": "No se encontraron resultados",
+                    "emptyTable": "Ningún dato disponible en esta tabla",
+                    "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "search": "Buscar:",
+                    "infoThousands": ",",
+                    "loadingRecords": "Cargando...",
+                    "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                    },
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                }
+            });
+        });
+    </script>
 @endsection

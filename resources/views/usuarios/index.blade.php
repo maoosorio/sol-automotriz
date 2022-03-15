@@ -10,20 +10,21 @@
               <div class="col-lg-12">
                   <div class="card">
                       <div class="card-body">
-                          <a class="btn btn-warning" href="{{ route('usuarios.create') }}">Nuevo</a>
 
-                            <table class="table table-striped mt-2">
-                              <thead style="background-color:#6777ef">
-                                  <th style="display: none;">ID</th>
-                                  <th style="color:#fff;">Nombre</th>
-                                  <th style="color:#fff;">E-mail</th>
-                                  <th style="color:#fff;">Rol</th>
-                                  <th style="color:#fff;">Acciones</th>
+                        @can('crear-usuario')
+                        <a class="btn btn-success mb-2" href="{{ route('usuarios.create') }}"><i class="fas fa-plus"></i></a>
+                        @endcan
+
+                            <table id="usuarios" class="table table-responsive-sm table-striped table-bordered mt-2">
+                              <thead>
+                                  <th>Nombre</th>
+                                  <th>E-mail</th>
+                                  <th>Rol</th>
+                                  <th>Acciones</th>
                               </thead>
                               <tbody>
                                 @foreach ($usuarios as $usuario)
                                   <tr>
-                                    <td style="display: none;">{{ $usuario->id }}</td>
                                     <td>{{ $usuario->name }}</td>
                                     <td>{{ $usuario->email }}</td>
                                     <td>
@@ -35,25 +36,59 @@
                                     </td>
 
                                     <td>
-                                      <a class="btn btn-info" href="{{ route('usuarios.edit',$usuario->id) }}">Editar</a>
+                                        @can('editar-usuario')
+                                        <a class="btn btn-warning" href="{{ route('usuarios.edit',$usuario->id) }}"><i class="fas fa-edit"></i></a>
+                                        @endcan
 
-                                      {!! Form::open(['method' => 'DELETE','route' => ['usuarios.destroy', $usuario->id],'style'=>'display:inline']) !!}
-                                          {!! Form::submit('Borrar', ['class' => 'btn btn-danger']) !!}
-                                      {!! Form::close() !!}
+                                        @can('borrar-usuario')
+                                        {!! Form::open(['method' => 'DELETE','route' => ['usuarios.destroy', $usuario->id],'style'=>'display:inline']) !!}
+                                        {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger'] )  }}
+                                        {!! Form::close() !!}
+                                        @endcan
                                     </td>
                                   </tr>
                                 @endforeach
                               </tbody>
                             </table>
-                            <!-- Centramos la paginacion a la derecha -->
-                          <div class="pagination justify-content-end">
-                            {!! $usuarios->links() !!}
-                          </div>
-
                       </div>
                   </div>
               </div>
           </div>
       </div>
     </section>
+@endsection
+
+
+@section('js')
+    <script>
+        $(function() {
+            $("#usuarios").DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "lengthMenu": [5, 10, 25, 50],
+                language: {
+                    "processing": "Procesando...",
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "zeroRecords": "No se encontraron resultados",
+                    "emptyTable": "Ningún dato disponible en esta tabla",
+                    "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "search": "Buscar:",
+                    "infoThousands": ",",
+                    "loadingRecords": "Cargando...",
+                    "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                    },
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                }
+            });
+        });
+    </script>
 @endsection
