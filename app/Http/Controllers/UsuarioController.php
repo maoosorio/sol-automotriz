@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Sucursal;
+use App\Models\Sucursal_Usuario;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,10 +17,11 @@ class UsuarioController extends Controller
 
     function __construct()
     {
-         $this->middleware('permission:ver-usuario|crear-usuario|editar-usuario|borrar-usuario', ['only' => ['index']]);
-         $this->middleware('permission:crear-usuario', ['only' => ['create','store']]);
-         $this->middleware('permission:editar-usuario', ['only' => ['edit','update']]);
-         $this->middleware('permission:borrar-usuario', ['only' => ['destroy']]);
+         $this->middleware('permission:1.2 ver-usuario|1.2.1 crear-usuario|1.2.2 editar-usuario|1.2.3 asignar-sucursal|1.2.4 borrar-usuario', ['only' => ['index']]);
+         $this->middleware('permission:1.2.1 crear-usuario', ['only' => ['create','store']]);
+         $this->middleware('permission:1.2.2 editar-usuario', ['only' => ['edit','update']]);
+         $this->middleware('permission:1.2.3 asignar-sucursal', ['only' => ['asignar','asignacion']]);
+         $this->middleware('permission:1.2.4 borrar-usuario', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -39,7 +42,8 @@ class UsuarioController extends Controller
     public function create()
     {
         $roles = Role::pluck('name','name')->all();
-        return view('usuarios.crear',compact('roles'));
+        $sucursales = Sucursal::get();
+        return view('usuarios.crear',compact('roles','sucursales'));
     }
 
     /**
@@ -54,7 +58,7 @@ class UsuarioController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
         ]);
 
         $input = $request->all();
@@ -88,7 +92,6 @@ class UsuarioController extends Controller
         $user = User::find($id);
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
-
         return view('usuarios.editar',compact('user','roles','userRole'));
     }
 
@@ -106,7 +109,7 @@ class UsuarioController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
             'password' => 'same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
         ]);
 
         $input = $request->all();
@@ -122,6 +125,34 @@ class UsuarioController extends Controller
 
         $user->assignRole($request->input('roles'));
 
+        return redirect()->route('usuarios.index');
+    }
+
+    public function asignar($id)
+    {
+        $user = User::find($id);
+        $sucursales = Sucursal::all();
+        $usuarios = Sucursal_Usuario::where('usuario_id',$id)->get();
+        return view('usuarios.asignar',compact('user','sucursales','usuarios'));
+    }
+
+    public function asignacion(Request $request, $id)
+    {
+        $this->validate($request, [
+            'usuario_id' => 'required',
+            'sucursal_id' => 'required',
+        ]);
+
+        $input = $request->all();
+        $user = User::find($id);
+        $user = Sucursal_Usuario::create($input);
+
+        return redirect()->route('usuarios.index');
+    }
+
+    public function asignacionDestroy($id)
+    {
+        Sucursal_Usuario::find($id)->delete();
         return redirect()->route('usuarios.index');
     }
 

@@ -19,8 +19,8 @@
                             </div>
                             @endif
 
-                            @can('crear-actividad')
-                                <a class="btn btn-success mb-2" href="{{ route('actividades.create') }}"><i
+                            @can('5.1 crear-actividad')
+                                <a class="btn btn-success mb-2" href="{{ route('actividades.create') }}" data-toggle="tooltip" data-placement="top" title="5.1 Crear Actividad"><i
                                         class="fas fa-plus"></i></a>
                             @endcan
 
@@ -34,24 +34,22 @@
                                     @foreach ($actividades as $actividad)
                                         <tr>
                                             <td>{{ $actividad->fecha }}</td>
+                                            {{-- @if (auth()->user()->sucursal_id == 1) --}}
                                             <td>{{ $actividad->tecnico->nombre }}</td>
+                                            {{-- @else --}}
+                                            {{-- <td>{{ $actividad->nombre }}</td>
+                                            @endif --}}
                                             <td>
 
-                                                @can('crear-asginacion')
+                                                @can('5.2 ver-asignacion')
                                                     <a class="btn btn-primary"
                                                         href="{{ route('actividades.asignar', $actividad->id) }}"><i
-                                                            class="fas fa-tasks"></i></a>
+                                                            class="fas fa-tasks" data-toggle="tooltip" data-placement="top" title="5.4 Ver Asignación"></i></a>
                                                 @endcan
 
-                                                {{-- @can('editar-actividad')
-                                                    <a class="btn btn-warning"
-                                                        href="{{ route('actividades.edit', $actividad->id) }}"><i
-                                                            class="fas fa-edit"></i></a>
-                                                @endcan --}}
-
-                                                @can('borrar-actividad')
+                                                @can('5.3 borrar-actividad')
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['actividades.destroy', $actividad->id], 'style' => 'display:inline']) !!}
-                                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) }}
+                                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => '5.3 Borrar Actividad']) }}
                                                     {!! Form::close() !!}
                                                 @endcan
                                             </td>

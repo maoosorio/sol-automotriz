@@ -7,6 +7,7 @@ use App\Models\Actividad_Tecnico;
 use App\Models\Vehiculo;
 use App\Models\Tecnico;
 use App\Models\Horario;
+// use PDF;
 
 class ReporteController extends Controller
 {

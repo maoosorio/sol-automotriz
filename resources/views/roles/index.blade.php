@@ -11,8 +11,8 @@
                     <div class="card">
                         <div class="card-body">
 
-                        @can('crear-rol')
-                        <a class="btn btn-success mb-2" href="{{ route('roles.create') }}"><i class="fas fa-plus"></i></a>
+                        @can('1.3.1 crear-rol')
+                        <a class="btn btn-success mb-2" href="{{ route('roles.create') }}" data-widget="collapse" data-toggle="tooltip" title="1.3.1 Crear Rol"><i class="fas fa-plus"></i></a>
                         @endcan
 
 
@@ -26,13 +26,13 @@
                                 <tr>
                                     <td>{{ $role->name }}</td>
                                     <td>
-                                        @can('editar-rol')
-                                            <a class="btn btn-warning" href="{{ route('roles.edit',$role->id) }}"><i class="fas fa-edit"></i></a>
+                                        @can('1.3.2 editar-rol')
+                                            <a class="btn btn-warning" href="{{ route('roles.edit',$role->id) }}" data-widget="collapse" data-toggle="tooltip" title="1.3.2 Editar Rol"><i class="fas fa-edit"></i></a>
                                         @endcan
 
-                                        @can('borrar-rol')
+                                        @can('1.3.3 borrar-rol')
                                             {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
-                                            {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger'] )  }}
+                                            {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => '1.3.3 Borrar Rol'] )  }}
                                             {!! Form::close() !!}
                                         @endcan
                                     </td>

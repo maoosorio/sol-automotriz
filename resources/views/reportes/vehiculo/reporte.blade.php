@@ -11,11 +11,13 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <table id="reporte" class="table table-responsive-sm table-striped table-bordered mt-2">
+                            <table id="reporte" class="table table-responsive-sm table-striped table-bordered mt-2" with-buttons>
                                 <thead class="bg-dark">
                                     <tr>
                                         <td>Fecha</td>
                                         <td>Hora</td>
+                                        <td>Valor Métrico</td>
+                                        <td>Valor Monetario</td>
                                         <td>Técnico - Actividad</td>
                                         {{-- @for ($i = $fecha_final; $i < $fecha_inicio; $i++)
 
@@ -55,6 +57,16 @@
                                         {{-- @if ($item->pivot->hora == $horario->hora) --}}
                                         <td>{{ $item->fecha }}</td>
                                         <td>{{ $item->hora }}</td>
+                                        @if ($item->valor_metrico == null)
+                                        <td class="bg-danger">Aún no se le asigna</td>
+                                        @else
+                                        <td>{{ $item->valor_metrico }}</td>
+                                        @endif
+                                        @if ($item->valor_monetario == null)
+                                        <td class="bg-danger">Aún no se le asigna</td>
+                                        @else
+                                        <td>{{ $item->valor_monetario }}</td>
+                                        @endif
                                         <td>{{ $item->nombre .' - '. $item->actividad }}</td>
                                         {{-- @else --}}
                                         {{-- <td class="bg-warning">No hubo actividad</td> --}}

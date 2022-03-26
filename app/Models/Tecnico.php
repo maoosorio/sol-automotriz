@@ -10,11 +10,21 @@ class Tecnico extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nombre',
+        'nombre','tipo', 'sucursal_id'
     ];
 
     public function actividad()
     {
         return $this->hasMany(Actividad::class);
+    }
+
+    public function prestamo()
+    {
+        return $this->hasMany(Prestamo::class);
+    }
+
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class);
     }
 }

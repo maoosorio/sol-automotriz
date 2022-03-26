@@ -4,16 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Vehiculo;
+use App\Models\Sucursal;
 
 class VehiculoController extends Controller
 {
 
     function __construct()
     {
-         $this->middleware('permission:ver-vehiculo|crear-vehiculo|editar-vehiculo|borrar-vehiculo', ['only' => ['index']]);
-         $this->middleware('permission:crear-vehiculo', ['only' => ['create','store']]);
-         $this->middleware('permission:editar-vehiculo', ['only' => ['edit','update']]);
-         $this->middleware('permission:borrar-vehiculo', ['only' => ['destroy']]);
+         $this->middleware('permission:3 ver-vehiculo|3.1 crear-vehiculo|3.2 editar-vehiculo|3.3 borrar-vehiculo', ['only' => ['index']]);
+         $this->middleware('permission:3.1 crear-vehiculo', ['only' => ['create','store']]);
+         $this->middleware('permission:3.2 editar-vehiculo', ['only' => ['edit','update']]);
+         $this->middleware('permission:3.3 borrar-vehiculo', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -22,7 +23,12 @@ class VehiculoController extends Controller
      */
     public function index()
     {
-        $vehiculos = Vehiculo::all();
+        // if(auth()->user()->sucursal_id == 1) {
+            $vehiculos = Vehiculo::where('estado','activo')->get();
+        // }else{
+        //     $sucursal_id = auth()->user()->sucursal_id;
+        //     $vehiculos = Vehiculo::where([['sucursal_id', '=', $sucursal_id],['estado', '=', 'activo']])->get();
+        // }
         return view('vehiculos.index',compact('vehiculos'));
     }
 
@@ -34,7 +40,8 @@ class VehiculoController extends Controller
     public function create()
     {
         $vehiculos = Vehiculo::get();
-        return view('vehiculos.crear',compact('vehiculos'));
+        $sucursales = Sucursal::get();
+        return view('vehiculos.crear',compact('vehiculos','sucursales'));
     }
 
     /**
@@ -48,8 +55,10 @@ class VehiculoController extends Controller
         $this->validate($request, [
             'vehiculo' => 'required',
             'placa' => 'required',
+            'estado' => 'required',
+            'sucursal_id' => 'required',
         ]);
-        $vehiculo = Vehiculo::create(['vehiculo' => $request->input('vehiculo'),'placa' => $request->input('placa')]);
+        $vehiculo = Vehiculo::create(['vehiculo' => $request->input('vehiculo'),'placa' => $request->input('placa'),'estado' => $request->input('estado'),'sucursal_id' => $request->input('sucursal_id')]);
         return redirect()->route('vehiculos.index');
     }
 
@@ -73,7 +82,8 @@ class VehiculoController extends Controller
     public function edit($id)
     {
         $vehiculo = Vehiculo::find($id);
-        return view('vehiculos.editar', compact('vehiculo'));
+        $sucursales = Sucursal::get();
+        return view('vehiculos.editar', compact('vehiculo','sucursales'));
     }
 
     /**
@@ -88,6 +98,8 @@ class VehiculoController extends Controller
         $vehiculo = Vehiculo::find($id);
         $vehiculo->vehiculo = $request->input('vehiculo');
         $vehiculo->placa = $request->input('placa');
+        $vehiculo->estado = $request->input('estado');
+        $vehiculo->sucursal_id = $request->input('sucursal_id');
         $vehiculo->update();
         return redirect()->route('vehiculos.index');
     }

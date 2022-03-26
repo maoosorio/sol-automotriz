@@ -10,6 +10,21 @@ class Vehiculo extends Model
     use HasFactory;
 
     protected $fillable = [
-        'vehiculo', 'placa',
+        'vehiculo', 'placa', 'sucursal_id', 'estado'
     ];
+
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class);
+    }
+
+    public function traslado()
+    {
+        return $this->hasMany(Traslado::class);
+    }
+
+    public function alta()
+    {
+        return $this->hasMany(Alta::class);
+    }
 }

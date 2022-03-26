@@ -11,8 +11,8 @@
                   <div class="card">
                       <div class="card-body">
 
-                        @can('crear-usuario')
-                        <a class="btn btn-success mb-2" href="{{ route('usuarios.create') }}"><i class="fas fa-plus"></i></a>
+                        @can('1.2.1 crear-usuario')
+                        <a class="btn btn-success mb-2" href="{{ route('usuarios.create') }}" data-widget="collapse" data-toggle="tooltip" title="1.2.1 Crear Usuario"><i class="fas fa-plus"></i></a>
                         @endcan
 
                             <table id="usuarios" class="table table-responsive-sm table-striped table-bordered mt-2">
@@ -36,13 +36,17 @@
                                     </td>
 
                                     <td>
-                                        @can('editar-usuario')
-                                        <a class="btn btn-warning" href="{{ route('usuarios.edit',$usuario->id) }}"><i class="fas fa-edit"></i></a>
+                                        @can('1.2.2 editar-usuario')
+                                        <a class="btn btn-warning" href="{{ route('usuarios.edit',$usuario->id) }}" data-widget="collapse" data-toggle="tooltip" title="1.2.2 Editar Usuario"><i class="fas fa-edit"></i></a>
                                         @endcan
 
-                                        @can('borrar-usuario')
+                                        @can('1.2.3 asignar-sucursal')
+                                        <a class="btn btn-primary" href="{{ route('usuarios.asignar',$usuario->id) }}" data-widget="collapse" data-toggle="tooltip" title="1.2.3 Asignar Sucursal"><i class="fas fa-warehouse"></i></a>
+                                        @endcan
+
+                                        @can('1.2.4 borrar-usuario')
                                         {!! Form::open(['method' => 'DELETE','route' => ['usuarios.destroy', $usuario->id],'style'=>'display:inline']) !!}
-                                        {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger'] )  }}
+                                        {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => '1.2.4 Borrar Usuario'] )  }}
                                         {!! Form::close() !!}
                                         @endcan
                                     </td>

@@ -31,6 +31,22 @@
                                     {!! Form::text('nombre', null, array('class' => 'form-control')) !!}
                                 </div>
                             </div>
+                            {{-- @if (auth()->user()->sucursal_id == 1) --}}
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label for="sucursal_id">Sucursal</label>
+                                    <select name="sucursal_id" id="sucursal_id" class="form-control select2bs4 @error('sucursal_id') is-invalid @enderror">
+                                        <option value="0" disabled="disabled" selected="selected">Selecciona una opción...</option>
+                                        @foreach ($sucursales as $sucursal)
+                                            <option value="{{$sucursal->id}}" {{ $tecnico->sucursal_id == $sucursal->id ? 'selected=selected':''}}>{{$sucursal->nombre}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            {{-- @else
+                            <input class="form-control" type="hidden" name="sucursal_id" value="{{ auth()->user()->sucursal_id }}">
+                            @endif --}}
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>

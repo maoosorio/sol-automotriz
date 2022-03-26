@@ -16,6 +16,8 @@ class CreateTecnicosTable extends Migration
         Schema::create('tecnicos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->string('tipo');
+            $table->foreignId('sucursal_id')->constrained('sucursales');
             $table->timestamps();
         });
     }

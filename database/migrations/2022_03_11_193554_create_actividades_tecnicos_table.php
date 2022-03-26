@@ -18,8 +18,13 @@ class CreateActividadesTecnicosTable extends Migration
             $table->foreignId('actividad_id')->constrained('actividades');
             $table->foreignId('horario_id')->constrained('horarios');
             $table->foreignId('vehiculo_id')->constrained('vehiculos');
+            $table->decimal('valor_metrico', $precision = 8, $scale = 2)->nullable($value = true);
+            $table->boolean('vmes')->nullable();
+            $table->decimal('valor_monetario', 8, 2)->nullable($value = true);
+            $table->boolean('vmos')->nullable();
             $table->string('actividad');
             $table->timestamps();
+            $table->unique( array('actividad_id','horario_id', 'vehiculo_id') );
         });
     }
 

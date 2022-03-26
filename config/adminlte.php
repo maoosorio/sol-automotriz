@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'use_ico_only' => false,
+    'use_ico_only' => true,
     'use_full_favicon' => false,
 
     /*
@@ -321,44 +321,111 @@ return [
         //     'icon_color' => 'cyan',
         //     'url'        => '#',
         // ],
-        ['text'        => 'Usuarios',
-        'url'         => 'usuarios',
-        'icon'        => 'fa fa-fw fa-users',
-        'can'  => 'ver-usuario'],
 
-        ['text'        => 'Roles',
-        'url'         => 'roles',
-        'icon'        => 'fa fa-fw fa-user-lock',
-        'can'  => 'ver-rol'],
-
-        ['text'        => 'Técnicos',
-        'url'         => 'tecnicos',
-        'icon'        => 'fas fa-fw fa-hard-hat',
-        'can'  => 'ver-tecnico'],
-
-        ['text'        => 'Vehículos',
-        'url'         => 'vehiculos',
-        'icon'        => 'fas fa-fw fa-car',
-        'can'  => 'ver-vehiculo'],
-
-        ['text'        => 'Actividades',
-        'url'         => 'actividades',
-        'icon'        => 'fas fa-fw fa-tasks',
-        'can'  => 'ver-actividad'],
-
-        ['text'    => 'Reportes',
-        'icon'        => 'fas fa-fw fa-calendar-day',
-        'can'  => 'ver-reporte',
-        'submenu' => [
+        ['text' => '1 Ajustes',
+        'icon'  => 'fa fa-fw fa-cogs',
+        'can'   => '1 ver-ajuste',
+        'submenu'   => [
                 [
-                    'text' => 'Vehículos',
-                    'icon'        => 'fas fa-fw fa-car',
-                    'url'  => 'reporteVehiculo',
+                    'text'  => '1.1 Sucursales',
+                    'icon'  => 'fa fa-fw fa-warehouse',
+                    'url'   => 'sucursales',
+                    'can'   => '1.1 ver-sucursal',
                 ],
                 [
-                    'text' => 'Técnicos',
-                    'icon'        => 'fas fa-fw fa-hard-hat',
-                    'url'  => 'reporteTecnico',
+                    'text'  => '1.2 Usuarios',
+                    'icon'  => 'fa fa-fw fa-user',
+                    'url'   => 'usuarios',
+                    'can'   => '1.2 ver-usuario',
+                ],
+                [
+                    'text'  => '1.3 Roles',
+                    'icon'  => 'fa fa-fw fa-user-lock',
+                    'url'   => 'roles',
+                    'can'   => '1.3 ver-rol',
+                ],
+
+            ],
+        ],
+
+        ['text' => '2 Personal',
+        'icon'  => 'fa fa-fw fa-users',
+        'can'   => '2 ver-personal',
+        'submenu'   => [
+                [
+                    'text'  => '2.1 Administrativo',
+                    'icon'  => 'fa fa-fw fa-user-plus',
+                    'url'   => 'administrativos',
+                    'can'   => '2.1 ver-administrativo',
+                ],
+                [
+                    'text'  => '2.2 Técnicos',
+                    'icon'  => 'fa fa-fw fa-hard-hat',
+                    'url'   => 'tecnicos',
+                    'can'   => '2.2 ver-tecnico',
+                ],
+
+            ],
+        ],
+
+        ['text' => '3 Vehículos',
+        'url'   => 'vehiculos',
+        'icon'  => 'fa fa-fw fa-car',
+        'can'   => '3 ver-vehiculo'],
+
+        ['text' => '4 Traslados',
+        'url'   => 'traslados',
+        'icon'  => 'fa fa-fw fa-truck',
+        'can'   => '4 ver-traslado'],
+
+        ['text' => '5 Actividades',
+        'url'   => 'actividades',
+        'icon'  => 'fa fa-fw fa-wrench',
+        'can'   => '5 ver-actividad'],
+
+        ['text' => '6 Préstamos',
+        'url'   => 'prestamos',
+        'icon'  => 'fa fa-fw fa-dollar-sign',
+        'can'   => '6 ver-prestamo'],
+
+        ['text' => '7 Altas',
+        'url'   => 'altas',
+        'icon'  => 'fa fa-fw fa-car',
+        'can'   => '7 ver-alta'],
+
+        ['text' => '8 Reportes',
+        'icon'  => 'fa fa-fw fa-chart-line',
+        'can'   => '8 ver-reporte',
+        'submenu'   => [
+                [
+                    'text'  => '8.1 Vehículos',
+                    'icon'  => 'fa fa-fw fa-car',
+                    'url'   => 'reporteVehiculo',
+                    'can'   => '8.1 ver-rv',
+                ],
+                [
+                    'text'  => '8.2 Técnicos',
+                    'icon'  => 'fa fa-fw fa-hard-hat',
+                    'url'   => 'reporteTecnico',
+                    'can'   => '8.2 ver-rt',
+                ],
+                [
+                    'text'  => '8.3 Administrativos',
+                    'icon'  => 'fa fa-fw fa-user-plus',
+                    'url'   => 'reporteAdministrativo',
+                    'can'   => '8.3 ver-ra',
+                ],
+                [
+                    'text'  => '8.4 Préstamos',
+                    'icon'  => 'fa fa-fw fa-dollar-sign',
+                    'url'   => 'reportePrestamo',
+                    'can'   => '8.4 ver-rp',
+                ],
+                [
+                    'text'  => '8.5 Traslados',
+                    'icon'  => 'fa fa-fw fa-truck',
+                    'url'   => 'reporteTraslado',
+                    'can'   => '8.5 ver-rm',
                 ],
 
             ],
@@ -418,6 +485,7 @@ return [
                     'asset' => true,
                     'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
                 ],
+
             ],
         ],
         'Select2' => [

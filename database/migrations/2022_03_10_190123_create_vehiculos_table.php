@@ -16,6 +16,9 @@ class CreateVehiculosTable extends Migration
         Schema::create('vehiculos', function (Blueprint $table) {
             $table->id();
             $table->string('vehiculo');
+            $table->string('estado')->nullable();
+            $table->foreignId('sucursal_id')->constrained('sucursales')->default(2);
+            $table->date('alta')->nullable();
             $table->string('placa');
             $table->timestamps();
         });

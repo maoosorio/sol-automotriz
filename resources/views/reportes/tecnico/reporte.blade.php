@@ -16,6 +16,8 @@
                                     <tr>
                                         <td>Fecha</td>
                                         <td>Hora</td>
+                                        <td>Valor Métrico</td>
+                                        <td>Valor Monetario</td>
                                         <td>Vehículo - Actividad</td>
                                         {{-- @for ($i = $fecha_final; $i < $fecha_inicio; $i++)
 
@@ -65,6 +67,16 @@
                                         <tr>
                                         <td>{{ $item->fecha }}</td>
                                         <td>{{ $item->hora }}</td>
+                                        @if ($item->valor_metrico == null)
+                                        <td class="bg-danger">Aún no se le asigna</td>
+                                        @else
+                                        <td>{{ $item->valor_metrico }}</td>
+                                        @endif
+                                        @if ($item->valor_monetario == null)
+                                        <td class="bg-danger">Aún no se le asigna</td>
+                                        @else
+                                        <td>{{ $item->valor_monetario }}</td>
+                                        @endif
                                         <td>{{ $item->vehiculo .' - '. $item->actividad }}</td>
                                         </tr>
                                         @endforeach

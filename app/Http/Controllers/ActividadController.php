@@ -14,10 +14,10 @@ class ActividadController extends Controller
 
     function __construct()
     {
-         $this->middleware('permission:ver-actividad|crear-actividad|editar-actividad|borrar-actividad', ['only' => ['index']]);
-         $this->middleware('permission:crear-actividad', ['only' => ['create','store']]);
-         $this->middleware('permission:editar-actividad', ['only' => ['edit','update']]);
-         $this->middleware('permission:borrar-actividad', ['only' => ['destroy']]);
+         $this->middleware('permission:5 ver-actividad|5.1 crear-actividad|5.2 editar-actividad|5.3 borrar-actividad|5.4 ver-asignacion', ['only' => ['index']]);
+         $this->middleware('permission:5.1 crear-actividad', ['only' => ['create','store']]);
+         $this->middleware('permission:5.2 editar-actividad', ['only' => ['edit','update', 'valor']]);
+         $this->middleware('permission:5.3 borrar-actividad', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -34,7 +34,13 @@ class ActividadController extends Controller
          $ayer = strtotime('-1 day', strtotime($hoy));
         }
         $ayer = date('Y-m-d', $ayer);
-        $actividades = Actividad::whereBetween('fecha', [$ayer, $hoy])->orderBy('fecha', 'asc')->all();
+        // if(auth()->user()->sucursal_id == 1) {
+            // $actividades = Actividad::get();
+        // }else{
+        //     $sucursal_id = auth()->user()->sucursal_id;
+            // $actividades = Actividad::sucursal($sucursal_id, $ayer, $hoy);
+            $actividades = Actividad::whereBetween('fecha', [$ayer, $hoy])->orderBy('fecha', 'asc')->get();
+        // }
         $status = '';
         return view('actividades.index',compact('actividades','status'));
     }
@@ -47,7 +53,12 @@ class ActividadController extends Controller
     public function create()
     {
         $actividades = Actividad::get();
-        $tecnicos = Tecnico::get();
+        // if(auth()->user()->sucursal_id == 1) {
+            $tecnicos = Tecnico::where('tipo','Tecnico')->get();
+        // }else{
+        //     $sucursal_id = auth()->user()->sucursal_id;
+        //     $tecnicos = Tecnico::where([['sucursal_id', '=', $sucursal_id], ['tipo', '=', 'Tecnico']])->get();
+        // }
         return view('actividades.crear',compact('actividades', 'tecnicos'));
     }
 
@@ -87,7 +98,7 @@ class ActividadController extends Controller
     public function edit($id)
     {
         $actividad = Actividad::find($id);
-        $tecnicos = Tecnico::get();
+        $tecnicos = Tecnico::where('tipo','Tecnico')->get();
         return view('actividades.editar', compact('actividad', 'tecnicos'));
     }
 
@@ -129,9 +140,15 @@ class ActividadController extends Controller
         $actividad = Actividad::find($id);
         $actividades = Actividad_Tecnico::where('actividad_id', $id)->orderBy('horario_id', 'asc')->get();
         $horarios = Horario::get();
-        $vehiculos = Vehiculo::get();
+        // if(auth()->user()->sucursal_id == 1) {
+            $vehiculos = Vehiculo::where('estado','Activo')->get();
+        // }else{
+        //     $sucursal_id = auth()->user()->sucursal_id;
+        //     $vehiculos = Vehiculo::where([['sucursal_id', '=', $sucursal_id], ['estado', '=', 'activo']])->get();
+        // }
+        $status = '';
         $lista = Actividad_Tecnico::lista($id);
-        return view('actividades.asignar', compact('actividad', 'actividades', 'horarios', 'vehiculos', 'lista'));
+        return view('actividades.asignar', compact('actividad', 'actividades', 'horarios', 'vehiculos', 'lista', 'status'));
     }
 
     public function asignacion(Request $request)
@@ -142,13 +159,54 @@ class ActividadController extends Controller
             'vehiculo_id' => 'required',
             'actividad' => 'required',
             ]);
-            $actividades = Actividad_Tecnico::create(['horario_id' => $request->input('horario_id'),'actividad_id' => $request->input('actividad_id'), 'vehiculo_id' => $request->input('vehiculo_id'),'actividad' => $request->input('actividad')]);
+            $hora = $request->input('horario_id');
+
+            try {
+            for($i = 0; $i < count($hora); $i++) {
+                    $actividades = Actividad_Tecnico::create(['horario_id' => $hora[$i],'actividad_id' => $request->input('actividad_id'), 'vehiculo_id' => $request->input('vehiculo_id'),'actividad' => $request->input('actividad')]);
+                }
+                } catch (\Illuminate\Database\QueryException $e) {
+                    $status = '';
+                }
             $actividad = Actividad::find($request->input('actividad_id'));
             $actividades = Actividad_Tecnico::where('actividad_id', $request->input('actividad_id'))->orderBy('horario_id', 'asc')->get();
             $horarios = Horario::get();
             $vehiculos = Vehiculo::get();
             $lista = Actividad_Tecnico::lista($request->input('actividad_id'));
+            // return redirect()->route('actividades.asignar',['id',$request->input('actividad_id')])->with('status',$status);
         return view('actividades.asignar', compact('actividad', 'actividades', 'horarios', 'vehiculos', 'lista'));
+    }
+
+    public function agregarValor($id)
+    {
+        $actividad = Actividad_Tecnico::find($id);
+        return view('actividades.valor', compact('actividad'));
+    }
+
+    public function guardarValor(Request $request)
+    {
+        $this->validate($request, [
+            'valor_metrico' => '',
+            'valor_monetario' => '',
+            'actividad_id' => ''
+            ]);
+            $actividadx = Actividad_Tecnico::find($request->input('actividad_id'));
+            $actividadx->valor_metrico = $request->input('valor_metrico');
+            $actividadx->valor_monetario = $request->input('valor_monetario');
+            if($request->input('vmes') != null){
+            $actividadx->vmes = $request->input('vmes');
+            }
+            if($request->input('vmos') != null){
+            $actividadx->vmos = $request->input('vmos');
+            }
+            $actividadx->update();
+
+            $actividad = Actividad::find($request->input('id'));
+            $actividades = Actividad_Tecnico::where('actividad_id', $request->input('id'))->orderBy('horario_id', 'asc')->get();
+            $horarios = Horario::get();
+            $vehiculos = Vehiculo::get();
+            $lista = Actividad_Tecnico::lista($request->input('id'));
+            return view('actividades.asignar', compact('actividad', 'actividades', 'horarios', 'vehiculos', 'lista'));
     }
 
     public function asignacionUpdate(Request $request, $id)
@@ -179,6 +237,7 @@ class ActividadController extends Controller
         $horarios = Horario::get();
         $vehiculos = Vehiculo::get();
         $lista = Actividad_Tecnico::lista($actividad_id);
+
         return view('actividades.asignar', compact('actividad', 'actividades', 'horarios', 'vehiculos', 'lista'));
     }
 }

@@ -11,8 +11,8 @@
                   <div class="card">
                       <div class="card-body">
 
-                        @can('crear-vehiculo')
-                          <a class="btn btn-success mb-2" href="{{ route('vehiculos.create') }}"><i class="fas fa-plus"></i></a>
+                        @can('3.1 crear-vehiculo')
+                          <a class="btn btn-success mb-2" href="{{ route('vehiculos.create') }}" data-widget="collapse" data-toggle="tooltip" title="3.1 Crear Vehículo"><i class="fas fa-plus"></i></a>
                           @endcan
 
                             <table id="vehiculos" class="table table-responsive-sm table-striped table-bordered mt-2">
@@ -20,6 +20,11 @@
                                   <th># Proyecto</th>
                                   <th>Vehículo</th>
                                   <th>Placas</th>
+                                    {{-- @if (auth()->user()->sucursal_id == 1)
+                                        <th>
+                                            {{ 'Sucursal' }}
+                                        </th>
+                                    @endif --}}
                                   <th>Acciones</th>
                               </thead>
                               <tbody>
@@ -28,14 +33,19 @@
                                     <td>{{ $vehiculo->id }}</td>
                                     <td>{{ $vehiculo->vehiculo }}</td>
                                     <td>{{ $vehiculo->placa }}</td>
+                                    {{-- @if (auth()->user()->sucursal_id == 1)
+                                                <td>
+                                                    {{ $vehiculo->sucursal->nombre }}
+                                                </td>
+                                                @endif --}}
                                     <td>
-                                      @can('editar-vehiculo')
-                                      <a class="btn btn-warning" href="{{ route('vehiculos.edit',$vehiculo->id) }}"><i class="fas fa-edit"></i></a>
+                                      @can('3.2 editar-vehiculo')
+                                      <a class="btn btn-warning" href="{{ route('vehiculos.edit',$vehiculo->id) }}" data-widget="collapse" data-toggle="tooltip" title="3.2 Editar Vehículo"><i class="fas fa-edit"></i></a>
                                       @endcan
 
-                                      @can('borrar-vehiculo')
+                                      @can('3.3 borrar-vehiculo')
                                       {!! Form::open(['method' => 'DELETE','route' => ['vehiculos.destroy', $vehiculo->id],'style'=>'display:inline']) !!}
-                                      {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger'] )  }}
+                                      {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => '3.3 Borrar Vehículo'] )  }}
                                       {!! Form::close() !!}
                                       @endcan
                                     </td>

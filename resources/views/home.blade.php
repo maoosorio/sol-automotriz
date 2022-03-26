@@ -43,12 +43,38 @@
                                     </div> --}}
 
                                 <div class="col-md-6 col-xl-6">
+                                    <div class="card bg-success">
+                                        <div class="card-header">
+                                            <h4>Administrativos</h4>
+                                            @php
+                                                use App\Models\Tecnico;
+                                                // if(auth()->user()->sucursal_id == 1) {
+                                                $cant_administrativos = Tecnico::where('tipo', 'Administrativo')->count();
+                                                // }else{
+                                                //     $sucursal_id = auth()->user()->sucursal_id;
+                                                //     $cant_administrativos = Tecnico::where([['sucursal_id', '=', $sucursal_id], ['tipo', '=', 'Administrativo']])->count();
+                                                // }
+                                            @endphp
+                                            <h2 class="text-right"><i class="fa fa-user-lock fa-2x fa-pull-left"></i>
+                                                <span>{{ $cant_administrativos }}</span>
+                                            </h2>
+                                            <p class="text-right"><a href="/administrativos" class="text-white">Ver más</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-xl-6">
                                     <div class="card bg-warning">
                                         <div class="card-header">
                                             <h4>Técnicos</h4>
                                             @php
-                                                use App\Models\Tecnico;
-                                                $cant_tecnicos = Tecnico::count();
+                                                // if(auth()->user()->sucursal_id == 1) {
+                                                $cant_tecnicos = Tecnico::where('tipo', 'Tecnico')->count();
+                                                // }else{
+                                                //     $sucursal_id = auth()->user()->sucursal_id;
+                                                //     $cant_tecnicos = Tecnico::where([['sucursal_id', '=', $sucursal_id], ['tipo', '=', 'Tecnico']])->count();
+                                                // }
                                             @endphp
                                             <h2 class="text-right"><i class="fa fa-user-lock fa-2x fa-pull-left"></i>
                                                 <span>{{ $cant_tecnicos }}</span>
@@ -65,7 +91,12 @@
                                             <h4>Vehículos</h4>
                                             @php
                                                 use App\Models\Vehiculo;
-                                                $cant_vehiculos = Vehiculo::count();
+                                                // if(auth()->user()->sucursal_id == 1) {
+                                                    $cant_vehiculos = Vehiculo::count();
+                                                // }else{
+                                                //     $sucursal_id = auth()->user()->sucursal_id;
+                                                //     $cant_vehiculos = Vehiculo::where('sucursal_id', $sucursal_id)->count();
+                                                // }
                                             @endphp
                                             <h2 class="text-right"><i class="fa fa-user-lock fa-2x fa-pull-left"></i>
                                                 <span>{{ $cant_vehiculos }}</span>

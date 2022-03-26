@@ -10,30 +10,40 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            @can('crear-tecnico')
-                                <a class="btn btn-success mb-2" href="{{ route('tecnicos.create') }}"><i
+                            @can('2.2.1 crear-tecnico')
+                                <a class="btn btn-success mb-2" href="{{ route('tecnicos.create') }}" data-widget="collapse" data-toggle="tooltip" title="2.2.1 Crear Técnico"><i
                                         class="fas fa-plus"></i></a>
                             @endcan
 
                             <table id="tecnicos" class="table table-responsive-sm table-striped table-bordered mt-2">
                                 <thead>
                                     <th>Nombre</th>
+                                    {{-- @if (auth()->user()->sucursal_id == 1)
+                                        <th>
+                                            {{ 'Sucursal' }}
+                                        </th>
+                                    @endif --}}
                                     <th>Acciones</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($tecnicos as $tecnico)
                                         <tr>
                                             <td>{{ $tecnico->nombre }}</td>
+                                            {{-- @if (auth()->user()->sucursal_id == 1)
+                                                <td>
+                                                    {{ $tecnico->sucursal->nombre }}
+                                                </td>
+                                                @endif --}}
                                             <td>
-                                                @can('editar-tecnico')
+                                                @can('2.2.2 editar-tecnico')
                                                     <a class="btn btn-warning"
-                                                        href="{{ route('tecnicos.edit', $tecnico->id) }}"><i
+                                                        href="{{ route('tecnicos.edit', $tecnico->id) }}" data-widget="collapse" data-toggle="tooltip" title="2.2.2 Editar Técnico"><i
                                                             class="fas fa-edit"></i></a>
                                                 @endcan
 
-                                                @can('borrar-tecnico')
+                                                @can('2.2.3 borrar-tecnico')
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['tecnicos.destroy', $tecnico->id], 'style' => 'display:inline']) !!}
-                                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) }}
+                                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => '2.2.3 Borrar Técnico']) }}
                                                     {!! Form::close() !!}
                                                 @endcan
                                             </td>

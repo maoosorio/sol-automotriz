@@ -11,13 +11,15 @@ class Actividad_Tecnico extends Model
     use HasFactory;
     protected $table = "actividades_tecnicos";
     protected $fillable = [
-        'actividad_id', 'horario_id', 'vehiculo_id', 'actividad',
+        'actividad_id', 'horario_id', 'vehiculo_id', 'actividad', 'valor_metrico', 'valor_monetario', 'vmes', 'vmos'
     ];
 
     static public function lista($id)
     {
         $consulta = DB::select("SELECT a.id, a.vehiculo_id, a.horario_id
-                                    , a.actividad_id, a.actividad
+                                    , a.actividad_id, a.actividad,
+                                    a.valor_metrico, a.valor_monetario
+                                    , a.vmes, a.vmos
                                     , h.hora AS hora
                                     , v.vehiculo AS vehiculo
                                 FROM actividades_tecnicos a
@@ -35,6 +37,10 @@ class Actividad_Tecnico extends Model
                                     a.horario_id,
                                     a.actividad_id,
                                     a.actividad,
+                                    a.valor_metrico,
+                                    a.valor_monetario,
+                                    a.vmos,
+                                    a.vmes,
                                     h.hora AS hora,
                                     v.vehiculo AS vehiculo,
                                     t.nombre AS nombre,
@@ -60,6 +66,10 @@ class Actividad_Tecnico extends Model
                                     a.horario_id,
                                     a.actividad_id,
                                     a.actividad,
+                                    a.valor_metrico,
+                                    a.valor_monetario,
+                                    a.vmos,
+                                    a.vmes,
                                     h.hora AS hora,
                                     v.vehiculo AS vehiculo,
                                     t.nombre AS nombre,

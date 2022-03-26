@@ -39,7 +39,7 @@
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="tecnico_id">Técnico</label>
-                                    <select name="tecnico_id" id="tecnico_id" class="form-control select2bs4 @error('tecnico_id') is-invalid @enderror">
+                                    <select name="tecnico_id" id="tecnico_id" class="form-control select2bs4 @error('tecnico_id') is-invalid @enderror" data-live-search="true">
                                         @foreach ($tecnicos as $tecnico)
                                             <option value="{{$tecnico->id}}" {{ $actividad->tecnico_id == $tecnico->id ? 'selected=selected':''}}>{{$tecnico->nombre}}
                                             </option>
@@ -58,4 +58,12 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('js')
+<script>
+    $(document).ready(function() {
+    $('#tecnico_id').select2();
+});
+</script>
 @endsection
