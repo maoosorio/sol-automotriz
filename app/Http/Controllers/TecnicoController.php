@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tecnico;
 use App\Models\Sucursal;
+use App\Models\UsuarioLog;
 
 class TecnicoController extends Controller
 {
@@ -23,12 +24,12 @@ class TecnicoController extends Controller
      */
     public function index()
     {
-        // if(auth()->user()->sucursal_id == 1) {
+        if(auth()->user()->sucursal_id == 1) {
             $tecnicos = Tecnico::where('tipo','Tecnico')->get();
-        // }else{
-            // $sucursal_id = auth()->user()->sucursal_id;
-            // $tecnicos = Tecnico::where([['sucursal_id', '=', $sucursal_id], ['tipo', '=', 'Tecnico']])->get();
-        // }
+        }else{
+            $sucursal_id = auth()->user()->sucursal_id;
+            $tecnicos = Tecnico::where([['sucursal_id', '=', $sucursal_id], ['tipo', '=', 'Tecnico']])->get();
+        }
         return view('tecnicos.index',compact('tecnicos'));
     }
 
@@ -40,7 +41,7 @@ class TecnicoController extends Controller
     public function create()
     {
         $tecnicos = Tecnico::get();
-        $sucursales = Sucursal::get();
+        $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
         return view('tecnicos.crear',compact('tecnicos','sucursales'));
     }
 
@@ -58,6 +59,11 @@ class TecnicoController extends Controller
             'sucursal_id' => 'required',
         ]);
         $tecnicos = Tecnico::create(['nombre' => $request->input('nombre'),'tipo' => $request->input('tipo'),'sucursal_id' => $request->input('sucursal_id')]);
+
+        $id = auth()->user()->id;
+        $accion = 'crear tecnico';
+        $tabla = 'tecnico';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('tecnicos.index');
     }
 
@@ -81,7 +87,7 @@ class TecnicoController extends Controller
     public function edit($id)
     {
         $tecnico = Tecnico::find($id);
-        $sucursales = Sucursal::get();
+        $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
         return view('tecnicos.editar', compact('tecnico','sucursales'));
     }
 
@@ -98,6 +104,11 @@ class TecnicoController extends Controller
         $tecnico->nombre = $request->input('nombre');
         $tecnico->sucursal_id = $request->input('sucursal_id');
         $tecnico->update();
+
+        $id = auth()->user()->id;
+        $accion = 'actualizar tecnico';
+        $tabla = 'tecnico';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('tecnicos.index');
     }
 
@@ -111,6 +122,11 @@ class TecnicoController extends Controller
     {
         $tecnico = Tecnico::find($id);
         $tecnico->delete();
+
+        $id = auth()->user()->id;
+        $accion = 'borrar tecnico';
+        $tabla = 'tecnico';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('tecnicos.index');
     }
 }

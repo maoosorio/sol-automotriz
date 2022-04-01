@@ -7,6 +7,7 @@ use App\Models\Prestamo;
 use App\Models\Prestamo_Tecnico;
 use App\Models\Tecnico;
 use App\Models\Sucursal;
+use App\Models\UsuarioLog;
 
 class PrestamoController extends Controller
 {
@@ -25,15 +26,15 @@ class PrestamoController extends Controller
      */
     public function index()
     {
-        // if(auth()->user()->sucursal_id == 1) {
+        if(auth()->user()->sucursal_id == 1) {
             $prestamos = Prestamo::where('estado','1')->get();
             $tecnicos = Tecnico::get();
-        // }else{
-        //     $sucursal_id = auth()->user()->sucursal_id;
-        //     $prestamos = Prestamo::where('estado','activo')->get();
-        //     $tecnicos = Tecnico::where([['sucursal_id', '=', $sucursal_id]])->get();
-        // }
-        $sucursales = Sucursal::get();
+        }else{
+            $sucursal_id = auth()->user()->sucursal_id;
+            $prestamos = Prestamo::where('estado','activo')->get();
+            $tecnicos = Tecnico::where([['sucursal_id', '=', $sucursal_id]])->get();
+        }
+        $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
         return view('prestamos.index',compact('prestamos','tecnicos','sucursales'));
     }
 
@@ -44,14 +45,14 @@ class PrestamoController extends Controller
      */
     public function create()
     {
-        // $sucursales = Sucursal::get();
-        // if(auth()->user()->sucursal_id == 1) {
+        $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
+        if(auth()->user()->sucursal_id == 1) {
             $tecnicos = Tecnico::get();
-        // }else{
-        //     $sucursal_id = auth()->user()->sucursal_id;
-        //     $tecnicos = Tecnico::where([['sucursal_id', '=', $sucursal_id]])->get();
-        // }
-        $sucursales = Sucursal::get();
+        }else{
+            $sucursal_id = auth()->user()->sucursal_id;
+            $tecnicos = Tecnico::where([['sucursal_id', '=', $sucursal_id]])->get();
+        }
+        // $sucursales = Sucursal::get();
         return view('prestamos.crear',compact('sucursales','tecnicos'));
     }
 
@@ -70,6 +71,11 @@ class PrestamoController extends Controller
             'estado' => 'required',
         ]);
         $prestamos = Prestamo::create(['tecnico_id' => $request->input('tecnico_id'),'monto' => $request->input('monto'),'pagos' => $request->input('pagos'),'estado' => $request->input('estado')]);
+
+        $id = auth()->user()->id;
+        $accion = 'crear prestamo';
+        $tabla = 'prestamo';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('prestamos.index');
     }
 

@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Alta de Técnicos</h3>
+            <div class="row">
+                <h3 class="page__heading col-4">Alta de Técnicos</h3>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -32,7 +43,7 @@
                                     {!! Form::text('nombre', null, array('class' => 'form-control')) !!}
                                 </div>
                             </div>
-                            {{-- @if (auth()->user()->sucursal_id == 1) --}}
+                            @if (auth()->user()->sucursal_id == 1)
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="sucursal_id">Sucursal</label>
@@ -45,9 +56,9 @@
                                     </select>
                                 </div>
                             </div>
-                            {{-- @else
-                                @endif --}}
-                                {{-- <input class="form-control" type="hidden" name="usuario_id" value="{{ auth()->user()->id }}"> --}}
+                            @else
+                            <input class="form-control" type="hidden" name="sucursal_id" value="{{ auth()->user()->sucursal_id }}">
+                            @endif
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>

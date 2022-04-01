@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Traslados</h3>
+            <div class="row">
+                <h3 class="page__heading col-4">Traslados</h3>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -29,38 +40,29 @@
                                     <th>Acciones</th>
                                 </thead>
                                 <tbody>
+                                {{-- @php
+                                dd($traslados);
+                                die();
+                                @endphp --}}
                                     @foreach ($traslados as $traslado)
                                         <tr>
                                             <td>{{ $traslado->id }}</td>
-                                            {{-- @foreach ($vehiculos as $vehiculo) --}}
-                                                {{-- @if (auth()->user()->sucursal_id == 1) --}}
-                                                    {{-- @if ($traslado->vehiculo_id == $vehiculo->id) --}}
-                                                        <td>{{ $traslado->vehiculo->vehiculo }}</td>
-                                                    {{-- @else --}}
-                                                        {{-- <td></td> --}}
-                                                    {{-- @endif --}}
-                                                {{-- @else --}}
-                                                    {{-- @if ($traslado->vehiculo_id == $vehiculo->id) --}}
-                                                        {{-- <td>{{ $traslado->vehiculo->vehiculo }}</td> --}}
-                                                    {{-- @else --}}
-                                                        {{-- <td></td> --}}
-                                                    {{-- @endif --}}
-                                                {{-- @endif --}}
-                                            {{-- @endforeach --}}
+                                            <td>{{ $traslado->vehiculo }}</td>
 
                                             {{-- @foreach ($sucursales as $sucursal) --}}
 
-                                            {{-- @if (auth()->user()->sucursal_id == 1) --}}
+                                            @if (auth()->user()->sucursal_id == 1)
                                                 {{-- @if ($traslado->sucursal_origen == $sucursal->id) --}}
-                                                {{-- <td> --}}
-                                                    {{-- {{ $traslado->sucursal->nombre }} --}}
-                                                {{-- </td> --}}
+                                                <td>{{ $traslado->origen }}</td>
+                                                {{-- @endif
+                                                @if ($traslado->sucursal_destino == $sucursal->id) --}}
+                                                <td>{{ $traslado->destino }}</td>
                                                 {{-- @endif --}}
-                                            {{-- @endif --}}
-
-                                            {{-- @if ($traslado->sucursal_destino == $sucursal->id) --}}
-                                            <td>{{ $traslado->sucursal_destino }}</td>
-                                            {{-- @endif --}}
+                                            @else
+                                                {{-- @if ($traslado->sucursal_destino == $sucursal->id) --}}
+                                                <td>{{ $traslado->origen }}</td>
+                                                {{-- @endif --}}
+                                            @endif
 
                                             {{-- @endforeach --}}
                                             <td>@php
@@ -75,13 +77,13 @@
                                                 @endphp
                                             </td>
                                             <td>
-                                                @if ($traslado->estado == 'En Proceso')
+                                                {{-- @if ($traslado->estado == 'En Proceso')
                                                 @can('4.2 editar-traslado')
                                                 <a class="btn btn-warning"
                                                 href="{{ route('traslados.edit', $traslado->id) }}" data-widget="collapse" data-toggle="tooltip" title="4.2 Editar Traslado"><i
                                                 class="fas fa-edit"></i></a>
                                                 @endcan
-                                                @endif
+                                                @endif --}}
 
                                                 @can('4.3 aprobar-traslado')
                                                 <a class="btn btn-success"

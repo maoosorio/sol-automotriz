@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Altas</h3>
+            <div class="row">
+                <h3 class="page__heading col-4">Altas</h3>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -18,11 +29,11 @@
                             <table id="altas" class="table table-responsive-sm table-striped table-bordered mt-2">
                                 <thead>
                                     <th># Alta</th>
-                                    {{-- @if (auth()->user()->sucursal_id == 1)
+                                    @if (auth()->user()->sucursal_id == 1)
                                         <th>
                                             {{ 'Sucursal' }}
                                         </th>
-                                    @endif --}}
+                                    @endif
                                     <th>Vehículo</th>
                                     <th>Fecha y Hora</th>
                                     <th>Acciones</th>
@@ -32,13 +43,13 @@
                                         <tr>
                                             <td>{{ $alta->id }}</td>
                                             {{-- @foreach ($sucursales as $sucursal) --}}
-                                                {{-- @if (auth()->user()->sucursal_id == 1) --}}
+                                                @if (auth()->user()->sucursal_id == 1)
                                                     {{-- @if ($alta->sucursal_id == $sucursal->id) --}}
-                                                    {{-- <td>
-                                                        {{ $sucursal->nombre }}
+                                                    <td>
+                                                        {{ $alta->sucursal->nombre }}
                                                     </td>
-                                                    @endif --}}
-                                                {{-- @endif --}}
+                                                    {{-- @endif --}}
+                                                @endif
                                             {{-- @endforeach --}}
                                             <td>{{ $alta->vehiculo->vehiculo }}</td>
                                             <td>{{ $alta->created_at }}</td>

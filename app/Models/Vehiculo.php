@@ -10,7 +10,7 @@ class Vehiculo extends Model
     use HasFactory;
 
     protected $fillable = [
-        'vehiculo', 'placa', 'sucursal_id', 'estado'
+        'vehiculo', 'placa', 'sucursal_id', 'estado', 'referencia'
     ];
 
     public function sucursal()

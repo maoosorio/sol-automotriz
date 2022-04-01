@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Técnicos</h3>
+            <div class="row">
+                <h3 class="page__heading col-4">Técnicos</h3>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -18,22 +29,22 @@
                             <table id="tecnicos" class="table table-responsive-sm table-striped table-bordered mt-2">
                                 <thead>
                                     <th>Nombre</th>
-                                    {{-- @if (auth()->user()->sucursal_id == 1)
+                                    @if (auth()->user()->sucursal_id == 1)
                                         <th>
                                             {{ 'Sucursal' }}
                                         </th>
-                                    @endif --}}
+                                    @endif
                                     <th>Acciones</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($tecnicos as $tecnico)
                                         <tr>
                                             <td>{{ $tecnico->nombre }}</td>
-                                            {{-- @if (auth()->user()->sucursal_id == 1)
+                                            @if (auth()->user()->sucursal_id == 1)
                                                 <td>
                                                     {{ $tecnico->sucursal->nombre }}
                                                 </td>
-                                                @endif --}}
+                                                @endif
                                             <td>
                                                 @can('2.2.2 editar-tecnico')
                                                     <a class="btn btn-warning"

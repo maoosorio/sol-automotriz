@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Editar Vehículo</h3>
+            <div class="row">
+                <h3 class="page__heading col-4">Editar Vehículo</h3>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -38,7 +49,13 @@
                                     {!! Form::text('placa', null, array('class' => 'form-control','onkeypress' => 'return ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122))')) !!}
                                 </div>
                             </div>
-                            {{-- @if (auth()->user()->sucursal_id == 1) --}}
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label for="referencia">Referencia</label>
+                                    {!! Form::text('referencia', null, array('class' => 'form-control','onkeypress' => 'return ((event.charCode >= 48 && event.charCode <= 57))')) !!}
+                                </div>
+                            </div>
+                            @if (auth()->user()->sucursal_id == 1)
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="sucursal_id">Sucursal</label>
@@ -51,9 +68,9 @@
                                     </select>
                                 </div>
                             </div>
-                            {{-- @else
+                            @else
                             <input class="form-control" type="hidden" name="sucursal_id" value="{{ auth()->user()->sucursal_id }}">
-                            @endif --}}
+                            @endif
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>

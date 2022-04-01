@@ -20,6 +20,7 @@ class CreateVehiculosTable extends Migration
             $table->foreignId('sucursal_id')->constrained('sucursales')->default(2);
             $table->date('alta')->nullable();
             $table->string('placa');
+            $table->integer('referencia')->nullable();
             $table->timestamps();
         });
     }

@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Actividades</h3>
+            <div class="row">
+            <h3 class="page__heading col-4">Actividades</h3>
+            <div class="col-4"></div>
+            <div class="col-4">
+                @php
+                use App\Models\Sucursal;
+                $id = auth()->user()->sucursal_id;
+                $sucur = Sucursal::find($id) ;
+                @endphp
+                <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                </p></div>
+            </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -12,7 +23,7 @@
                         <div class="card-body">
 
                             @if (session('status'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">{{ session('status') }}
+                            <div class="alert alert-{{ session('color') }} alert-dismissible fade show" role="alert">{{ session('status') }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -34,17 +45,17 @@
                                     @foreach ($actividades as $actividad)
                                         <tr>
                                             <td>{{ $actividad->fecha }}</td>
-                                            {{-- @if (auth()->user()->sucursal_id == 1) --}}
+                                            @if (auth()->user()->sucursal_id == 1)
                                             <td>{{ $actividad->tecnico->nombre }}</td>
-                                            {{-- @else --}}
-                                            {{-- <td>{{ $actividad->nombre }}</td>
-                                            @endif --}}
+                                            @else
+                                            <td>{{ $actividad->nombre }}</td>
+                                            @endif
                                             <td>
 
                                                 @can('5.2 ver-asignacion')
                                                     <a class="btn btn-primary"
                                                         href="{{ route('actividades.asignar', $actividad->id) }}"><i
-                                                            class="fas fa-tasks" data-toggle="tooltip" data-placement="top" title="5.4 Ver Asignación"></i></a>
+                                                            class="fas fa-tasks" data-toggle="tooltip" data-placement="top" title="5.2 Ver Asignación"></i></a>
                                                 @endcan
 
                                                 @can('5.3 borrar-actividad')

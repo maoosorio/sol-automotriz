@@ -4,7 +4,7 @@
     <section class="section">
         <div class="section-header">
             <div class="row">
-                <h3 class="page__heading col-4">Alta de Administrativos</h3>
+                <h3 class="page__heading col-4">Reporte de Actividades - Vehículos</h3>
                 <div class="col-4"></div>
                 <div class="col-4">
                     @php
@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="card-body">
 
-                        @if ($errors->any())
+                            @if ($errors->any())
                             <div class="alert alert-dark alert-dismissible fade show" role="alert">
                             <strong>¡Revise los campos!</strong>
                                 @foreach ($errors->all() as $error)
@@ -34,33 +34,16 @@
                             </div>
                         @endif
 
-                        {!! Form::open(array('route' => 'administrativos.store','method'=>'POST')) !!}
+                            {!! Form::open(array('route' => 'reporteVD','method'=>'POST')) !!}
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre</label>
-                                    <input class="form-control" type="hidden" name="tipo" value="Administrativo">
-                                    {!! Form::text('nombre', null, array('class' => 'form-control')) !!}
+                                    <label for="fecha_inicio">Fecha</label>
+                                    <input type="date" class="form-control" name="fecha_inicio">
                                 </div>
                             </div>
-                            @if (auth()->user()->sucursal_id == 1)
                             <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <label for="sucursal_id">Sucursal</label>
-                                    <select name="sucursal_id" id="sucursal_id" class="form-control select2bs4 @error('sucursal_id') is-invalid @enderror">
-                                        <option value="0" disabled="disabled" selected="selected">Selecciona una opción...</option>
-                                        @foreach ($sucursales as $sucursal)
-                                            <option value="{{$sucursal->id}}" {{old('sucursal_id') == $sucursal->id ? 'selected=selected':''}}>{{$sucursal->nombre}}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            @else
-                            <input class="form-control" type="hidden" name="sucursal_id" value="{{ auth()->user()->sucursal_id }}">
-                            @endif
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <button type="submit" class="btn btn-primary">Ver Reporte</button>
                             </div>
                         </div>
                         {!! Form::close() !!}

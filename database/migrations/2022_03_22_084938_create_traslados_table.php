@@ -23,6 +23,7 @@ class CreateTrasladosTable extends Migration
             $table->string('link');
             $table->string('estado');
             $table->timestamps();
+            $table->unique( array('id','sucursal_origen','sucursal_destino') );
         });
     }
 

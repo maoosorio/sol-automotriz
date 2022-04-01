@@ -17,6 +17,7 @@ class CreateActividadesTable extends Migration
             $table->id();
             $table->date('fecha');
             $table->foreignId('tecnico_id')->constrained('tecnicos');
+            $table->unique( array('fecha','tecnico_id') );
             $table->timestamps();
         });
     }

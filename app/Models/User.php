@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -41,6 +42,6 @@ class User extends Authenticatable
 
     public function sucursal()
     {
-        return $this->hasMany(Sucursal_Usuario::class);
+        return $this->belongsToMany(Sucursal::class);
     }
 }

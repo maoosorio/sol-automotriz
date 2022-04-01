@@ -188,6 +188,7 @@ return [
     */
 
     'use_route_url' => false,
+    // 'dashboard_url' => 'sucursal',
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
@@ -197,7 +198,9 @@ return [
     // 'register_url' => 'register',
     // 'password_reset_url' => 'password/reset',
     // 'password_email_url' => 'password/email',
+    // 'profile_url' => 'sucursal',
     'profile_url' => false,
+
 
     /*
     |--------------------------------------------------------------------------
@@ -230,9 +233,9 @@ return [
     'menu' => [
         // Navbar items:
         // [
-        //     'type'         => 'navbar-search',
-        //     'text'         => 'search',
-        //     'topnav_right' => true,
+        //     'text'          => 'Hola',
+        //     'url'           => '#',
+        //     'topnav'        => true,
         // ],
         // [
         //     'type'         => 'fullscreen-widget',
@@ -402,6 +405,20 @@ return [
                     'icon'  => 'fa fa-fw fa-car',
                     'url'   => 'reporteVehiculo',
                     'can'   => '8.1 ver-rv',
+                    'submenu'   => [
+                        [
+                            'text'  => '8.1.1 Por Día',
+                            'icon'  => 'fa fa-fw fa-car',
+                            'url'   => 'reporteVehiculoDia',
+                            'can'   => '8.1 ver-rv',
+                        ],
+                        [
+                            'text'  => '8.1.2 Sin Actividad',
+                            'icon'  => 'fa fa-fw fa-car',
+                            'url'   => 'reporteVehiculoActividad',
+                            'can'   => '8.1 ver-rv',
+                        ],
+                    ],
                 ],
                 [
                     'text'  => '8.2 Técnicos',
@@ -430,6 +447,10 @@ return [
 
             ],
         ],
+        // ['text' => '9 Cambiar de Sucursal',
+        // 'url'   => 'sucursal',
+        // 'icon'  => 'fa fa-fw fa-random',
+        // 'can'   => '9 cambiar-sucursal'],
 
     ],
     /*

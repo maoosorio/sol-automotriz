@@ -13,12 +13,13 @@ class CreateSucursalesUsuariosTable extends Migration
      */
     public function up()
     {
-        Schema::create('sucursales_usuarios', function (Blueprint $table) {
+        Schema::create('sucursal_user', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sucursal_id')->constrained('sucursales');
-            $table->foreignId('usuario_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users');
             $table->string('valor')->nullable();
             $table->timestamps();
+            $table->unique( array('sucursal_id','user_id') );
         });
     }
 

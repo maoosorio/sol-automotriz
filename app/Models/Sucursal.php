@@ -16,7 +16,7 @@ class Sucursal extends Model
 
     public function user()
     {
-        return $this->hasMany(Sucursal_Usuario::class);
+        return $this->belongsToMany(Usuario::class);
     }
 
     public function tecnico()

@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Arr;
+use App\Models\UsuarioLog;
 
 class UsuarioController extends Controller
 {
@@ -31,7 +32,9 @@ class UsuarioController extends Controller
     public function index(Request $request)
     {
         $usuarios = User::all();
-        return view('usuarios.index',compact('usuarios'));
+        $status = '';
+        $color = '';
+        return view('usuarios.index',compact('usuarios','status','color'));
     }
 
     /**
@@ -67,6 +70,10 @@ class UsuarioController extends Controller
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
 
+        $id = auth()->user()->id;
+        $accion = 'crear usuario';
+        $tabla = 'usuario';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('usuarios.index');
     }
 
@@ -125,6 +132,10 @@ class UsuarioController extends Controller
 
         $user->assignRole($request->input('roles'));
 
+        $id = auth()->user()->id;
+        $accion = 'actualizar usuario';
+        $tabla = 'usuario';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('usuarios.index');
     }
 
@@ -132,28 +143,54 @@ class UsuarioController extends Controller
     {
         $user = User::find($id);
         $sucursales = Sucursal::all();
-        $usuarios = Sucursal_Usuario::where('usuario_id',$id)->get();
+        $usuarios = Sucursal_Usuario::where('user_id',$id)->get();
         return view('usuarios.asignar',compact('user','sucursales','usuarios'));
     }
 
     public function asignacion(Request $request, $id)
     {
         $this->validate($request, [
-            'usuario_id' => 'required',
+            'user_id' => 'required',
             'sucursal_id' => 'required',
         ]);
 
         $input = $request->all();
         $user = User::find($id);
+        try {
+        $user->sucursal_id = $request['sucursal_id'];
+        $user->save();
         $user = Sucursal_Usuario::create($input);
+        $status = 'Se asignó correctamente';
+        $color = 'success';
 
-        return redirect()->route('usuarios.index');
+        $id = auth()->user()->id;
+        $accion = 'asigno sucursal';
+        $tabla = 'sucursal';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $status = 'Ya tiene asignada esa sucursal';
+            $color = 'danger';
+        }
+
+        return redirect()->route('usuarios.index')->with('status', $status)->with('color', $color);
     }
 
     public function asignacionDestroy($id)
     {
-        Sucursal_Usuario::find($id)->delete();
-        return redirect()->route('usuarios.index');
+        try {
+            Sucursal_Usuario::find($id)->delete();
+            $status = 'Se eliminó correctamente';
+            $color = 'success';
+
+            $id = auth()->user()->id;
+            $accion = 'desasigno sucursal';
+            $tabla = 'sucursal';
+            $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
+            } catch (\Illuminate\Database\QueryException $e) {
+                $status = 'No se puede eliminar la asignación';
+                $color = 'danger';
+            }
+        return redirect()->route('usuarios.index')->with('status', $status)->with('color', $color);
     }
 
     /**
@@ -164,7 +201,19 @@ class UsuarioController extends Controller
      */
     public function destroy($id)
     {
-        User::find($id)->delete();
-        return redirect()->route('usuarios.index');
+        try {
+            User::find($id)->delete();
+            $status = 'Se eliminó correctamente';
+            $color = 'success';
+
+            $id = auth()->user()->id;
+            $accion = 'borrar usuario';
+            $tabla = 'usuario';
+            $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            $status = 'No se puede eliminar';
+            $color = 'danger';
+        }
+        return redirect()->route('usuarios.index')->with('status', $status)->with('color', $color);
     }
 }

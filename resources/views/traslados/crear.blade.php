@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Alta de Traslado</h3>
+            <div class="row">
+                <h3 class="page__heading col-4">Alta de Traslado</h3>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -25,7 +36,7 @@
 
                         {!! Form::open(array('route' => 'traslados.store','method'=>'POST')) !!}
                         <div class="row">
-                            {{-- @if (auth()->user()->sucursal_id == 1) --}}
+                            @if (auth()->user()->sucursal_id == 1)
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="sucursal_origen">Sucursal Origen</label>
@@ -38,8 +49,8 @@
                                     </select>
                                 </div>
                             </div>
-                            {{-- @else
-                            <div class="col-xs-12 col-sm-12 col-md-12">
+                            @else
+                            {{-- <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="sucursal_origen">Sucursal Origen</label>
                                     <select name="sucursal_origen" id="sucursal_origen" class="form-control select2bs4 @error('sucursal_origen') is-invalid @enderror">
@@ -50,8 +61,8 @@
                                     </select>
                                 </div>
                             </div> --}}
-                            {{-- <input class="form-control" type="hidden" name="sucursal_origen" value="{{ auth()->user()->sucursal_id }}"> --}}
-                            {{-- @endif --}}
+                            <input class="form-control" type="hidden" name="sucursal_origen" value="{{ auth()->user()->sucursal_id }}">
+                            @endif
                             <input class="form-control" type="hidden" name="estado" value="En Proceso">
                             <input class="form-control" type="hidden" name="usuario_id" value="{{ auth()->user()->id }}">
                             <div class="col-xs-12 col-sm-12 col-md-12">
@@ -66,18 +77,28 @@
                                     </select>
                                 </div>
                             </div>
+                            @if (auth()->user()->sucursal_id == 1)
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label for="vehiculo_id">Vehículo</label>
+                                    <select name="vehiculo_id" id="vehiculo_id" class="form-control select2bs4 @error('vehiculo_id') is-invalid @enderror" data-live-search="true">
+                                    </select>
+                                </div>
+                            </div>
+                            @else
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="vehiculo_id">Vehículo</label>
                                     <select name="vehiculo_id" id="vehiculo_id" class="form-control select2bs4 @error('vehiculo_id') is-invalid @enderror" data-live-search="true">
                                         <option value="0" disabled="disabled" selected="selected">Selecciona una opción...</option>
                                         @foreach ($vehiculos as $vehiculo)
-                                            <option value="{{$vehiculo->id}}" {{old('vehiculo_id') == $vehiculo->id ? 'selected=selected':''}}>{{$vehiculo->vehiculo}}
+                                            <option value="{{$vehiculo->id}}" {{old('vehiculo_id') == $vehiculo->id ? 'selected=selected':''}}>{{$vehiculo->referencia .' - '. $vehiculo->vehiculo}}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
+                            @endif
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="observaciones">Observaciones</label>
@@ -104,6 +125,35 @@
 @endsection
 
 @section('js')
+    <script>
+            $(document).ready(function() {
+            $('#sucursal_origen').on('change', function() {
+               var sucursalID = $(this).val();
+               if(sucursalID) {
+                   $.ajax({
+                       url: '/traslados/create/'+sucursalID,
+                       type: "GET",
+                       data : {"_token":"{{ csrf_token() }}"},
+                       dataType: "json",
+                       success:function(data)
+                       {
+                         if(data){
+                            $('#vehiculo_id').empty();
+                            $('#vehiculo_id').append('<option hidden>Selecciona un Vehículo</option>');
+                            $.each(data, function(id, vehiculo, placa, referencia){
+                                $('select[name="vehiculo_id"]').append('<option value="'+  vehiculo.id +'">' + vehiculo.id +' - ' + vehiculo.vehiculo + ' - ' + vehiculo.referencia + ' - ' + vehiculo.placa + '</option>');
+                            });
+                        }else{
+                            $('#vehiculo_id').empty();
+                        }
+                     }
+                   });
+               }else{
+                 $('#vehiculo_id').empty();
+               }
+            });
+            });
+    </script>
     <script>
         $(document).ready(function() {
         $('#vehiculo_id').select2();

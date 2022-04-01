@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Administrativos</h3>
+            <div class="row">
+                <h3 class="page__heading col-4">Administrativos</h3>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -18,22 +29,22 @@
                             <table id="administrativos" class="table table-responsive-sm table-striped table-bordered mt-2">
                                 <thead>
                                     <th>Nombre</th>
-                                    {{-- @if (auth()->user()->sucursal_id == 1)
+                                    @if (auth()->user()->sucursal_id == 1)
                                         <th>
                                             {{ 'Sucursal' }}
                                         </th>
-                                    @endif --}}
+                                    @endif
                                     <th>Acciones</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($administrativos as $administrativo)
                                         <tr>
                                             <td>{{ $administrativo->nombre }}</td>
-                                            {{-- @if (auth()->user()->sucursal_id == 1)
+                                            @if (auth()->user()->sucursal_id == 1)
                                                 <td>
                                                     {{ $administrativo->sucursal->nombre }}
                                                 </td>
-                                             @endif --}}
+                                             @endif
                                             <td>
                                                 @can('2.1.2 editar-administrativo')
                                                     <a class="btn btn-warning"

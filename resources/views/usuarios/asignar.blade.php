@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Asignar Sucursales</h3>
+            <div class="row">
+                <h3 class="page__heading col-4">Asignar Sucursales</h3>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -28,7 +39,7 @@
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="name">Nombre</label>
-                                    <input class="form-control" type="hidden" name="usuario_id" value="{{ $user->id }}">
+                                    <input class="form-control" type="hidden" name="user_id" value="{{ $user->id }}">
                                     {!! Form::text('name', null, array('class' => 'form-control', 'readonly')) !!}
                                 </div>
                             </div>

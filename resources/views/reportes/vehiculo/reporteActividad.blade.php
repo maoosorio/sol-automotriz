@@ -3,8 +3,21 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Vehículo <b class="text-success">{{ $vehiculo->vehiculo }}</b></h3>
-            <h3 class="page__heading">Reporte del <b class="text-success">{{ $fecha_final }}</b> al <b class="text-success">{{ $fecha_inicio }}</b></h3>
+            <div class="row">
+                <div class="col-4">
+                    <h3 class="page__heading">Vehículo <b class="text-success">{{ $vehiculo->vehiculo }}</b></h3>
+                    <h3 class="page__heading">Reporte del <b class="text-success">{{ $fecha_final }}</b> al <b class="text-success">{{ $fecha_inicio }}</b></h3>
+                </div>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">

@@ -7,7 +7,7 @@ use App\Models\Actividad_Tecnico;
 use App\Models\Vehiculo;
 use App\Models\Tecnico;
 use App\Models\Horario;
-// use PDF;
+
 
 class ReporteController extends Controller
 {
@@ -19,13 +19,32 @@ class ReporteController extends Controller
         //  $this->middleware('permission:borrar-reporte', ['only' => ['destroy']]);
     }
 
-    public function vehiculo()
+    public function vehiculoDia()
     {
         $vehiculos = Vehiculo::get();
-        return view('reportes.vehiculo.index', compact('vehiculos'));
+        return view('reportes.vehiculo.dia', compact('vehiculos'));
     }
 
-    public function reporteVehiculo(Request $request)
+    public function vehiculoActividad()
+    {
+        $vehiculos = Vehiculo::get();
+        return view('reportes.vehiculo.actividad', compact('vehiculos'));
+    }
+
+    public function reporteVehiculoDia(Request $request)
+    {
+        $this->validate($request, [
+            'fecha_inicio' => 'required',
+        ]);
+        $fecha_inicio = $request->post('fecha_inicio');
+        $horarios = Horario::get();
+        $vehiculos = Vehiculo::get();
+        $listaVehiculos = Actividad_Tecnico::listaVehiculos($fecha_inicio);
+        $listaActividades = Actividad_Tecnico::listaActividades($fecha_inicio);
+        return view('reportes.vehiculo.reporteDia',compact('listaVehiculos','listaActividades','fecha_inicio','horarios','vehiculos'));
+    }
+
+    public function reporteVehiculoActividad(Request $request)
     {
         $this->validate($request, [
             'fecha_inicio' => 'required',
@@ -38,7 +57,7 @@ class ReporteController extends Controller
         $horarios = Horario::get();
         $vehiculo = Vehiculo::find($vehiculo_id);
         $lista = Actividad_Tecnico::listaVehiculo($fecha_inicio, $fecha_final, $vehiculo_id);
-        return view('reportes.vehiculo.reporte',compact('lista','fecha_inicio','fecha_final','horarios','vehiculo'));
+        return view('reportes.vehiculo.reporteActividad',compact('lista','fecha_inicio','fecha_final','horarios','vehiculo'));
     }
 
     public function tecnico()

@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h5 class="page__heading">Captura de Valores</h5>
+            <div class="row">
+                <h5 class="page__heading col-4">Captura de Valores</h5>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -37,14 +48,20 @@
                                                 value="{{ $actividad->actividad }}" disabled>
                                         </div>
                                     </div>
+
+                                    @if (auth()->user()->can('5.2.4 agregar-valorme') || auth()->user()->can('5.2.6 aprobar-valorme') )
                                     <div class="form-group row">
                                         <label for="valor_metrico" class="col-sm-2 col-form-label">Valor Métrico</label>
                                         <div class="col-sm-10">
-                                            <input type="number" name="valor_metrico" class="form-control"
+                                            <input type="number" step="0.01" name="valor_metrico" class="form-control"
                                                 value="{{ old('valor_monetario') ?? ($actividad->valor_metrico ?? '') }}"
-                                                placeholder="Valor Métrico">
+                                                placeholder="Valor Métrico" @if(auth()->user()->can('5.2.6 aprobar-valorme')) {{ 'readonly' }} @endif>
                                         </div>
                                     </div>
+                                    {{-- @endcan --}}
+                                    @endif
+
+                                    @can('5.2.6 aprobar-valorme')
                                     <fieldset class="form-group">
                                         <div class="row">
                                             <legend class="col-form-label col-sm-2 pt-0"></legend>
@@ -66,14 +83,21 @@
                                             </div>
                                         </div>
                                     </fieldset>
+                                    @endcan
+
+                                    @if (auth()->user()->can('5.2.5 agregar-valormo') || auth()->user()->can('5.2.7 aprobar-valormo') )
                                     <div class="form-group row">
                                         <label for="valor_monetario" class="col-sm-2 col-form-label">Valor Monetario</label>
                                         <div class="col-sm-10">
-                                            <input type="number" name="valor_monetario" class="form-control"
+                                            <input type="number" step="0.01" name="valor_monetario" class="form-control"
                                                 value="{{ old('valor_monetario') ?? ($actividad->valor_monetario ?? '') }}"
-                                                placeholder="Valor Monetario">
+                                                placeholder="Valor Monetario" @if(auth()->user()->can('5.2.7 aprobar-valormo')) {{ 'readonly' }} @endif>
                                         </div>
                                     </div>
+                                    {{-- @endcan --}}
+                                    @endif
+
+                                    @can('5.2.7 aprobar-valormo')
                                     <fieldset class="form-group">
                                         <div class="row">
                                             <legend class="col-form-label col-sm-2 pt-0"></legend>
@@ -91,6 +115,8 @@
                                             </div>
                                         </div>
                                     </fieldset>
+                                    @endcan
+
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <button type="submit" class="btn btn-primary">Actualizar</button>

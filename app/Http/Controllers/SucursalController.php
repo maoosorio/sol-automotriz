@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Sucursal;
+use App\Models\UsuarioLog;
 
 class SucursalController extends Controller
 {
@@ -48,6 +49,11 @@ class SucursalController extends Controller
             'nombre' => 'required',
         ]);
         $sucursales = Sucursal::create(['nombre' => $request->input('nombre')]);
+
+        $id = auth()->user()->id;
+        $accion = 'crear sucursal';
+        $tabla = 'sucursal';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('sucursales.index');
     }
 
@@ -86,6 +92,11 @@ class SucursalController extends Controller
         $sucursal = Sucursal::find($id);
         $sucursal->nombre = $request->input('nombre');
         $sucursal->update();
+
+        $id = auth()->user()->id;
+        $accion = 'actualizar sucursal';
+        $tabla = 'sucursal';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('sucursales.index');
     }
 
@@ -99,6 +110,11 @@ class SucursalController extends Controller
     {
         $sucursal = Sucursal::find($id);
         $sucursal->delete();
+
+        $id = auth()->user()->id;
+        $accion = 'borrar sucursal';
+        $tabla = 'sucursal';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('sucursales.index');
     }
 }

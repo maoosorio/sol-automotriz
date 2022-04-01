@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class UsuarioLog extends Model
 {
     use HasFactory;
+
+    protected $table = "usuarios_logs";
+    protected $fillable = [
+        'usuario_id', 'accion', 'tabla'
+    ];
 }

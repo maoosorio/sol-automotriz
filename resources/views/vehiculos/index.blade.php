@@ -3,7 +3,18 @@
 @section('content')
 <section class="section">
   <div class="section-header">
-      <h3 class="page__heading">Vehículos</h3>
+      <div class="row">
+          <h3 class="page__heading col-4">Vehículos</h3>
+        <div class="col-4"></div>
+        <div class="col-4">
+            @php
+            use App\Models\Sucursal;
+            $id = auth()->user()->sucursal_id;
+            $sucur = Sucursal::find($id) ;
+            @endphp
+            <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+            </p></div>
+        </div>
   </div>
       <div class="section-body">
           <div class="row">
@@ -20,11 +31,12 @@
                                   <th># Proyecto</th>
                                   <th>Vehículo</th>
                                   <th>Placas</th>
-                                    {{-- @if (auth()->user()->sucursal_id == 1)
+                                    @if (auth()->user()->sucursal_id == 1)
                                         <th>
                                             {{ 'Sucursal' }}
                                         </th>
-                                    @endif --}}
+                                    @endif
+                                  <th>Referencia</th>
                                   <th>Acciones</th>
                               </thead>
                               <tbody>
@@ -33,11 +45,12 @@
                                     <td>{{ $vehiculo->id }}</td>
                                     <td>{{ $vehiculo->vehiculo }}</td>
                                     <td>{{ $vehiculo->placa }}</td>
-                                    {{-- @if (auth()->user()->sucursal_id == 1)
+                                    @if (auth()->user()->sucursal_id == 1)
                                                 <td>
                                                     {{ $vehiculo->sucursal->nombre }}
                                                 </td>
-                                                @endif --}}
+                                                @endif
+                                    <td>{{ $vehiculo->referencia }}</td>
                                     <td>
                                       @can('3.2 editar-vehiculo')
                                       <a class="btn btn-warning" href="{{ route('vehiculos.edit',$vehiculo->id) }}" data-widget="collapse" data-toggle="tooltip" title="3.2 Editar Vehículo"><i class="fas fa-edit"></i></a>

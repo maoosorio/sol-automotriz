@@ -63,8 +63,12 @@ class SeederTablaPermisos extends Seeder
 
             // '5.4 ver-asignacion',
             '5.2.1 crear-asignacion',
-            '5.2.2 editar-asignacion',
+            // '5.2.2 editar-asignacion',
             '5.2.3 borrar-asignacion',
+            '5.2.4 agregar-valorme',
+            '5.2.5 agregar-valormo',
+            '5.2.6 aprobar-valorme',
+            '5.2.7 aprobar-valormo',
 
             '6 ver-prestamo',
             '6.1 crear-prestamo',
@@ -91,7 +95,7 @@ class SeederTablaPermisos extends Seeder
             '8.4.1 ver-rps',
 
             '8.5 ver-rm',
-            '8.5.1 ver-rms',
+            '8.5.1 ver-rms'
         ];
 
         foreach($permisos as $permiso) {

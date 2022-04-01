@@ -3,8 +3,21 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h5 class="page__heading">Actividades de: <b class="text-success">{{ $actividad->tecnico->nombre }}</b></h5>
-            <h5 class="page__heading">Fecha: <b class="text-success">{{ $actividad->fecha }}</b></h5>
+            <div class="row">
+                <div class="col-4">
+                <h5 class="page__heading">Actividades de: <b class="text-success">{{ $actividad->tecnico->nombre }}</b></h5>
+                <h5 class="page__heading">Fecha: <b class="text-success">{{ $actividad->fecha }}</b></h5>
+                </div>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -24,6 +37,14 @@
                                 </div>
                             @endif
 
+                            @if ($status)
+                            <div class="alert alert-{{ $color }} alert-dismissible fade show" role="alert">{{ $status }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            @endif
+
                             {!! Form::open(['route' => 'actividades.asignacion']) !!}
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 mb-2">
@@ -37,7 +58,7 @@
                                                 @foreach ($vehiculos as $vehiculo)
                                                     <option value="{{ $vehiculo->id }}"
                                                         {{ old('vehiculo_id') == $vehiculo->id ? 'selected=selected' : '' }}>
-                                                        {{ $vehiculo->vehiculo }}
+                                                        {{ $vehiculo->id .' - '. $vehiculo->vehiculo .' - '. $vehiculo->referencia .' - '. $vehiculo->placa }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -65,9 +86,13 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                @can('5.2.1 crear-asignacion')
                                 <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <button type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="5.4.1 Crear Asignacion">Guardar</button>
+                                    <button type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="5.2.1 Crear Asignacion">Guardar</button>
                                 </div>
+                                @endcan
+
                             </div>
                             {!! Form::close() !!}
 
@@ -78,6 +103,12 @@
                                             <th>Hora</th>
                                             <th>Vehículo</th>
                                             <th>Actividad</th>
+                                            @if (auth()->user()->can('5.2.4 agregar-valorme') || auth()->user()->can('5.2.6 aprobar-valorme') )
+                                            <th>Valor Métrico</th>
+                                            @endif
+                                            @if (auth()->user()->can('5.2.5 agregar-valormo') || auth()->user()->can('5.2.7 aprobar-valormo') )
+                                            <th>Valor Monetario</th>
+                                            @endif
                                             <th>Acciones</th>
                                         </thead>
                                         <tbody>
@@ -86,6 +117,14 @@
                                                     <td>{{ $row->hora }}</td>
                                                     <td>{{ $row->vehiculo }}</td>
                                                     <td>{{ $row->actividad }}</td>
+
+                                                    @if (auth()->user()->can('5.2.4 agregar-valorme') || auth()->user()->can('5.2.6 aprobar-valorme') )
+                                                    <td @php if($row->vmes == 0){ echo'class="text-danger"'; }else{ echo'class="text-success"';} @endphp><b>{{ $row->valor_metrico }}</b></td>
+                                                    @endif
+                                                    @if (auth()->user()->can('5.2.5 agregar-valormo') || auth()->user()->can('5.2.7 aprobar-valormo') )
+                                                    <td @php if($row->vmos == 0){ echo'class="text-danger"'; }else{ echo'class="text-success"';} @endphp><b>{{ $row->valor_monetario }}</b></td>
+                                                    @endif
+
                                                     <td>
                                                         {{-- @can('editar-asignacion')
                                                             <a href="{{route('actividades.asignacion.update', $row->id)}}" class="btn btn-warning" data-toggle="modal"
@@ -96,34 +135,30 @@
                                                                 data-actividad="{{ $row->actividad }}"><i
                                                                     class="fas fa-edit"></i></a>
                                                         @endcan --}}
-                                                        @can('ver-reporte')
-                                                        @php
-                                                        if($row->vmes == 0){
-                                                            echo "<span class='badge badge-danger mr-2'><i
-                                                                    class='fas fa-ruler'></i></span>";
-                                                        }else{
-                                                            echo "<span class='badge badge-success mr-2'><i
-                                                                    class='fas fa-ruler'></i></span>";
-                                                        }
-                                                        if($row->vmos == 0){
-                                                            echo "<span class='badge badge-danger mr-2'><i
-                                                                    class='fas fa-dollar-sign'></i></span>";
-                                                        }else{
-                                                            echo "<span class='badge badge-success mr-2'><i
-                                                                    class='fas fa-dollar-sign'></i></span>";
-                                                        }
 
-                                                        @endphp
+                                                        @can('5.2.4 agregar-valorme')
+                                                            <a class="btn btn-primary"
+                                                                href="{{ route('actividades.agregaValorMe', $row->id) }}" data-toggle="tooltip" data-placement="top" title="5.2.4 Agregar Valor Métrico"><i class="fa fa-cog" ></i></a>
                                                         @endcan
 
-                                                        @can('5.4.2 editar-asignacion')
-                                                            <a class="btn btn-warning"
-                                                                href="{{ route('actividades.agregaValor', $row->id) }}"><i class="fa fa-briefcase"></i></a>
+                                                        @can('5.2.5 agregar-valormo')
+                                                            <a class="btn btn-info"
+                                                                href="{{ route('actividades.agregaValorMo', $row->id) }}" data-toggle="tooltip" data-placement="top" title="5.2.5 Agregar Valor Monetario"><i class="fa fa-money-bill" ></i></a>
                                                         @endcan
 
-                                                        @can('5.4.3 borrar-asignacion')
+                                                        @can('5.2.6 aprobar-valorme')
+                                                            <a class="btn btn-success"
+                                                                href="{{ route('actividades.aprobarValorMe', $row->id) }}" data-toggle="tooltip" data-placement="top" title="5.2.6 Aprobar Valor Métrico"><i class="fa fa-cog" ></i></a>
+                                                        @endcan
+
+                                                        @can('5.2.7 aprobar-valormo')
+                                                            <a class="btn btn-success"
+                                                                href="{{ route('actividades.aprobarValorMo', $row->id) }}" data-toggle="tooltip" data-placement="top" title="5.2.7 Aprobar Valor Monetario"><i class="fa fa-money-bill" ></i></a>
+                                                        @endcan
+
+                                                        @can('5.2.3 borrar-asignacion')
                                                             {!! Form::open(['method' => 'DELETE', 'route' => ['actividades.asignacion.destroy', $row->id, $row->actividad_id], 'style' => 'display:inline']) !!}
-                                                            {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) }}
+                                                            {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => '5.2.3 Borrar Asignación']) }}
                                                             {!! Form::close() !!}
                                                         @endcan
                                                     </td>

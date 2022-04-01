@@ -24,7 +24,8 @@ class CreateActividadesTecnicosTable extends Migration
             $table->boolean('vmos')->nullable();
             $table->string('actividad');
             $table->timestamps();
-            $table->unique( array('actividad_id','horario_id', 'vehiculo_id') );
+            $table->unique( array('actividad_id','horario_id') );
+            // $table->unique( array('actividad_id','horario_id', 'vehiculo_id') );
         });
     }
 

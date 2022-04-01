@@ -3,13 +3,32 @@
 @section('content')
 <section class="section">
   <div class="section-header">
-      <h3 class="page__heading">Usuarios</h3>
+      <div class="row">
+          <h3 class="page__heading col-4">Usuarios</h3>
+            <div class="col-4"></div>
+            <div class="col-4">
+                @php
+                use App\Models\Sucursal;
+                $id = auth()->user()->sucursal_id;
+                $sucur = Sucursal::find($id) ;
+                @endphp
+                <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                </p></div>
+            </div>
   </div>
       <div class="section-body">
           <div class="row">
               <div class="col-lg-12">
                   <div class="card">
                       <div class="card-body">
+
+                        @if (session('status'))
+                        <div class="alert alert-{{ session('color') }} alert-dismissible fade show" role="alert">{{ session('status') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        @endif
 
                         @can('1.2.1 crear-usuario')
                         <a class="btn btn-success mb-2" href="{{ route('usuarios.create') }}" data-widget="collapse" data-toggle="tooltip" title="1.2.1 Crear Usuario"><i class="fas fa-plus"></i></a>

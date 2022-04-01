@@ -3,7 +3,18 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h3 class="page__heading">Editar Traslado</h3>
+            <div class="row">
+                <h3 class="page__heading col-4">Editar Traslado</h3>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    @php
+                    use App\Models\Sucursal;
+                    $id = auth()->user()->sucursal_id;
+                    $sucur = Sucursal::find($id) ;
+                    @endphp
+                    <p class="text-primary text-right">Sucursal: {{ $sucur->nombre }}
+                    </p></div>
+                </div>
         </div>
         <div class="section-body">
             <div class="row">
@@ -25,7 +36,7 @@
 
                         {!! Form::model($traslado, ['method' => 'PATCH','route' => ['traslados.update', $traslado->id]]) !!}
                         <div class="row">
-                            {{-- @if (auth()->user()->sucursal_id == 1) --}}
+                            @if (auth()->user()->sucursal_id == 1)
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="sucursal_origen">Sucursal Origen</label>
@@ -38,8 +49,8 @@
                                     </select>
                                 </div>
                             </div>
-                            {{-- @else
-                            <div class="col-xs-12 col-sm-12 col-md-12">
+                            @else
+                            {{-- <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="sucursal_origen">Sucursal Origen</label>
                                     <select name="sucursal_origen" id="sucursal_origen" class="form-control select2bs4 @error('sucursal_origen') is-invalid @enderror" disabled="disabled">
@@ -49,8 +60,9 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            @endif --}}
+                            </div> --}}
+                            <input class="form-control" type="hidden" name="sucursal_origen" value="{{ auth()->user()->sucursal_id }}">
+                            @endif
                             <input class="form-control" type="hidden" name="estado" value="En Proceso">
                             <input class="form-control" type="hidden" name="usuario_id" value="{{ auth()->user()->id }}">
                             <div class="col-xs-12 col-sm-12 col-md-12">
@@ -71,7 +83,7 @@
                                     <select name="vehiculo_id" id="vehiculo_id" class="form-control select2bs4 @error('vehiculo_id') is-invalid @enderror" data-live-search="true">
                                         <option value="0" disabled="disabled" selected="selected">Selecciona una opción...</option>
                                         @foreach ($vehiculos as $vehiculo)
-                                            <option value="{{$vehiculo->id}}" {{ $traslado->vehiculo_id == $vehiculo->id ? 'selected=selected':''}}>{{$vehiculo->vehiculo}}
+                                            <option value="{{$vehiculo->id}}" {{ $traslado->vehiculo_id == $vehiculo->id ? 'selected=selected':''}}>{{$vehiculo->referencia .' - '. $vehiculo->vehiculo}}
                                             </option>
                                         @endforeach
                                     </select>

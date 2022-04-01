@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
+use App\Models\UsuarioLog;
 
 
 class RolController extends Controller
@@ -35,7 +36,7 @@ class RolController extends Controller
      */
     public function create()
     {
-        $permission = Permission::get();
+        $permission = Permission::orderBy('name')->get();
         return view('roles.crear',compact('permission'));
     }
 
@@ -55,6 +56,10 @@ class RolController extends Controller
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
 
+        $id = auth()->user()->id;
+        $accion = 'crear rol';
+        $tabla = 'rol';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('roles.index');
     }
 
@@ -78,7 +83,7 @@ class RolController extends Controller
     public function edit($id)
     {
         $role = Role::find($id);
-        $permission = Permission::get();
+        $permission = Permission::orderBy('name')->get();
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
@@ -106,6 +111,10 @@ class RolController extends Controller
 
         $role->syncPermissions($request->input('permission'));
 
+        $id = auth()->user()->id;
+        $accion = 'actualizar rol';
+        $tabla = 'rol';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('roles.index');
     }
 
@@ -118,6 +127,11 @@ class RolController extends Controller
     public function destroy($id)
     {
         DB::table("roles")->where('id',$id)->delete();
+
+        $id = auth()->user()->id;
+        $accion = 'borrar rol';
+        $tabla = 'rol';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('roles.index');
     }
 }

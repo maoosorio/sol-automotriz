@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Tecnico;
 use App\Models\Sucursal;
 use App\Models\Sucursal_Usuario;
+use App\Models\UsuarioLog;
 
 class AdministrativoController extends Controller
 {
@@ -24,12 +25,12 @@ class AdministrativoController extends Controller
      */
     public function index()
     {
-        // if(auth()->user()->sucursal_id == 1) {
+        if(auth()->user()->sucursal_id == 1) {
             $administrativos = Tecnico::where('tipo','Administrativo')->get();
-        // }else{
-            // $sucursal_id = auth()->user()->sucursal_id;
-            // $administrativos = Tecnico::where([['sucursal_id', '=', $sucursal_id], ['tipo', '=', 'Administrativo']])->get();
-        // }
+        }else{
+            $sucursal_id = auth()->user()->sucursal_id;
+            $administrativos = Tecnico::where([['sucursal_id', '=', $sucursal_id], ['tipo', '=', 'Administrativo']])->get();
+        }
         return view('administrativos.index',compact('administrativos'));
     }
 
@@ -41,7 +42,7 @@ class AdministrativoController extends Controller
     public function create()
     {
         $administrativos = Tecnico::get();
-        $sucursales = Sucursal::get();
+        $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
         return view('administrativos.crear',compact('administrativos','sucursales'));
     }
 
@@ -59,6 +60,11 @@ class AdministrativoController extends Controller
             'sucursal_id' => 'required',
         ]);
         $administrativos = Tecnico::create(['nombre' => $request->input('nombre'),'tipo' => $request->input('tipo'),'sucursal_id' => $request->input('sucursal_id')]);
+
+        $id = auth()->user()->id;
+        $accion = 'crear administrativo';
+        $tabla = 'administrativo';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('administrativos.index');
     }
 
@@ -82,7 +88,7 @@ class AdministrativoController extends Controller
     public function edit($id)
     {
         $administrativo = Tecnico::find($id);
-        $sucursales = Sucursal::get();
+        $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
         return view('administrativos.editar', compact('administrativo','sucursales'));
     }
 
@@ -99,6 +105,11 @@ class AdministrativoController extends Controller
         $administrativo->nombre = $request->input('nombre');
         $administrativo->sucursal_id = $request->input('sucursal_id');
         $administrativo->update();
+
+        $id = auth()->user()->id;
+        $accion = 'actualizar administrativo';
+        $tabla = 'administrativo';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('administrativos.index');
     }
 
@@ -112,6 +123,11 @@ class AdministrativoController extends Controller
     {
         $administrativo = Tecnico::find($id);
         $administrativo->delete();
+
+        $id = auth()->user()->id;
+        $accion = 'borrar administrativo';
+        $tabla = 'administrativo';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('administrativos.index');
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Traslado;
 use App\Models\Sucursal;
 use App\Models\Vehiculo;
+use App\Models\UsuarioLog;
 
 class TrasladoController extends Controller
 {
@@ -25,15 +26,16 @@ class TrasladoController extends Controller
      */
     public function index()
     {
-        // if(auth()->user()->sucursal_id == 1) {
-            $traslados = Traslado::get();
+        if(auth()->user()->sucursal_id == 1) {
+            $traslados = Traslado::listaTraslados();
             $vehiculos = Vehiculo::where('estado','Activo')->get();
-        // }else{
-        //     $sucursal_id = auth()->user()->sucursal_id;
-        //     $traslados = Traslado::where('sucursal_origen', $sucursal_id)->orWhere('sucursal_destino', $sucursal_id)->get();
-        //     $vehiculos = Vehiculo::where([['sucursal_id', '=', $sucursal_id],['estado','Activo']])->get();
-        // }
-        $sucursales = Sucursal::get();
+        }else{
+            $sucursal_id = auth()->user()->sucursal_id;
+            $traslados = Traslado::listaTrasladosN($sucursal_id);
+            // $traslados = Traslado::where('sucursal_origen', $sucursal_id)->orWhere('sucursal_destino', $sucursal_id)->get();
+            $vehiculos = Vehiculo::where([['sucursal_id', '=', $sucursal_id],['estado','Activo']])->get();
+        }
+        $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
         return view('traslados.index',compact('traslados','sucursales','vehiculos'));
     }
 
@@ -44,13 +46,15 @@ class TrasladoController extends Controller
      */
     public function create()
     {
-        $sucursales = Sucursal::get();
-        // if(auth()->user()->sucursal_id == 1) {
+        if(auth()->user()->sucursal_id == 1) {
             $vehiculos = Vehiculo::where('estado','Activo')->get();
-        // }else{
-        //     $sucursal_id = auth()->user()->sucursal_id;
-        //     $vehiculos = Vehiculo::where([['sucursal_id', '=', $sucursal_id],['estado','Activo']])->get();
-        // }
+            $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
+            return view('traslados.crear',['sucursales' => $sucursales]);
+        }else{
+            $sucursal_id = auth()->user()->sucursal_id;
+            $vehiculos = Vehiculo::where([['sucursal_id', '=', $sucursal_id],['estado','Activo']])->get();
+            $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
+        }
         return view('traslados.crear',compact('sucursales','vehiculos'));
     }
 
@@ -72,6 +76,11 @@ class TrasladoController extends Controller
             'link' => 'required',
         ]);
         $traslados = Traslado::create(['sucursal_origen' => $request->input('sucursal_origen'),'sucursal_destino' => $request->input('sucursal_destino'),'vehiculo_id' => $request->input('vehiculo_id'),'usuario_id' => $request->input('usuario_id'),'observaciones' => $request->input('observaciones'),'link' => $request->input('link'),'estado' => $request->input('estado')]);
+
+        $id = auth()->user()->id;
+        $accion = 'crear traslado';
+        $tabla = 'traslado';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('traslados.index');
     }
 
@@ -95,26 +104,26 @@ class TrasladoController extends Controller
     public function edit($id)
     {
         $traslado = Traslado::find($id);
-        $sucursales = Sucursal::get();
-        // if(auth()->user()->sucursal_id == 1) {
+        $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
+        if(auth()->user()->sucursal_id == 1) {
             $vehiculos = Vehiculo::where('estado','Activo')->get();
-        // }else{
-        //     $sucursal_id = auth()->user()->sucursal_id;
-        //     $vehiculos = Vehiculo::where([['sucursal_id', '=', $sucursal_id],['estado','Activo']])->get();
-        // }
+        }else{
+            $sucursal_id = auth()->user()->sucursal_id;
+            $vehiculos = Vehiculo::where([['sucursal_id', '=', $sucursal_id],['estado','Activo']])->get();
+        }
         return view('traslados.editar', compact('traslado','sucursales','vehiculos'));
     }
 
     public function aprobar($id)
     {
         $traslado = Traslado::find($id);
-        $sucursales = Sucursal::get();
-        // if(auth()->user()->sucursal_id == 1) {
+        $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
+        if(auth()->user()->sucursal_id == 1) {
             $vehiculos = Vehiculo::where('estado','Activo')->get();
-        // }else{
-        //     $sucursal_id = auth()->user()->sucursal_id;
-        //     $vehiculos = Vehiculo::where([['sucursal_id', '=', $sucursal_id],['estado','Activo']])->get();
-        // }
+        }else{
+            $sucursal_id = auth()->user()->sucursal_id;
+            $vehiculos = Vehiculo::where([['sucursal_id', '=', $sucursal_id],['estado','Activo']])->get();
+        }
         return view('traslados.aprobar', compact('traslado','sucursales','vehiculos'));
     }
 
@@ -145,6 +154,10 @@ class TrasladoController extends Controller
             $traslado->update();
         }
 
+        $id = auth()->user()->id;
+        $accion = 'aprobar traslado';
+        $tabla = 'traslado';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('traslados.index');
     }
 
@@ -165,6 +178,11 @@ class TrasladoController extends Controller
         $traslado->observaciones = $request->input('observaciones');
         $traslado->link = $request->input('link');
         $traslado->update();
+
+        $id = auth()->user()->id;
+        $accion = 'actualizar traslado';
+        $tabla = 'traslado';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('traslados.index');
     }
 
@@ -178,6 +196,11 @@ class TrasladoController extends Controller
     {
         $traslado = Traslado::find($id);
         $traslado->delete();
+
+        $id = auth()->user()->id;
+        $accion = 'borrar traslado';
+        $tabla = 'traslado';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
         return redirect()->route('traslados.index');
     }
 }

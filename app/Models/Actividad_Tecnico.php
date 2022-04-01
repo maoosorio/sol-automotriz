@@ -29,6 +29,17 @@ class Actividad_Tecnico extends Model
         return $consulta;
     }
 
+    static public function listaVehiculos($fecha_inicio)
+    {
+        $consulta = DB::select("SELECT id,vehiculo, estado FROM vehiculos WHERE id IN(SELECT vehiculo_id FROM actividades_tecnicos WHERE actividad_id IN (SELECT id FROM actividades WHERE fecha = '$fecha_inicio'))");
+        return $consulta;
+    }
+    static public function listaActividades($fecha_inicio)
+    {
+        $consulta = DB::select("SELECT a.vehiculo_id, a.actividad, a.horario_id, a.actividad_id, t.nombre FROM actividades_tecnicos a INNER JOIN actividades ac ON a.actividad_id = ac.id INNER JOIN tecnicos t ON ac.tecnico_id = t.id WHERE a.actividad_id IN ( SELECT id FROM actividades WHERE fecha = '$fecha_inicio' )");
+        return $consulta;
+    }
+
     static public function listaVehiculo($fecha_inicio, $fecha_final, $vehiculo_id)
     {
         $consulta = DB::select("SELECT
@@ -41,6 +52,7 @@ class Actividad_Tecnico extends Model
                                     a.valor_monetario,
                                     a.vmos,
                                     a.vmes,
+                                    v.estado
                                     h.hora AS hora,
                                     v.vehiculo AS vehiculo,
                                     t.nombre AS nombre,

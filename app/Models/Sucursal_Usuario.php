@@ -9,12 +9,12 @@ class Sucursal_Usuario extends Model
 {
     use HasFactory;
 
-    protected $table = "sucursales_usuarios";
+    protected $table = "sucursal_user";
     protected $fillable = [
-        'sucursal_id', 'usuario_id', 'valor'
+        'sucursal_id', 'user_id', 'valor'
     ];
 
-    public function usuario()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
