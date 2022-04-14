@@ -95,7 +95,19 @@ class SeederTablaPermisos extends Seeder
             '8.4.1 ver-rps',
 
             '8.5 ver-rm',
-            '8.5.1 ver-rms'
+            '8.5.1 ver-rms',
+
+            '3.4 agregar-pat',
+            '3.5 borrar-pat',
+            '3.6 ver-pat',
+            '3.6.1 agregar-proceso',
+            '3.6.2 borrar-proceso',
+            '3.6.1.1 agregar-etapa',
+            '3.6.1.2 borrar-etapa',
+
+            '9 ver-pat',
+            '8.6 ver-rpat',
+
         ];
 
         foreach($permisos as $permiso) {

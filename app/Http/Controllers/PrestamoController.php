@@ -69,8 +69,9 @@ class PrestamoController extends Controller
             'monto' => 'required',
             'pagos' => 'required',
             'estado' => 'required',
+            'tipo' => 'required',
         ]);
-        $prestamos = Prestamo::create(['tecnico_id' => $request->input('tecnico_id'),'monto' => $request->input('monto'),'pagos' => $request->input('pagos'),'estado' => $request->input('estado')]);
+        $prestamos = Prestamo::create(['tecnico_id' => $request->input('tecnico_id'),'monto' => $request->input('monto'),'pagos' => $request->input('pagos'),'tipo' => $request->input('tipo'),'estado' => $request->input('estado')]);
 
         $id = auth()->user()->id;
         $accion = 'crear prestamo';
@@ -100,6 +101,8 @@ class PrestamoController extends Controller
     {
         $prestamo = Prestamo::find($id);
 
+
+
         $prestamos = Prestamo_Tecnico::where('prestamo_id',$id)->get();
         return view('prestamos.editar', compact('prestamo','prestamos'));
     }
@@ -124,6 +127,13 @@ class PrestamoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $prestamo = Prestamo::find($id);
+        $prestamo->delete();
+
+        $id = auth()->user()->id;
+        $accion = 'borrar prestamo';
+        $tabla = 'prestamo';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
+        return redirect()->route('prestamos.index');
     }
 }

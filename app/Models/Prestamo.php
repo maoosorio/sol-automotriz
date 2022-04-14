@@ -10,7 +10,7 @@ class Prestamo extends Model
     use HasFactory;
 
     protected $fillable = [
-        'tecnico_id', 'monto', 'pagos', 'estado'
+        'tecnico_id', 'monto', 'pagos', 'estado', 'tipo'
     ];
 
     public function tecnico()

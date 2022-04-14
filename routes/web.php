@@ -39,6 +39,16 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('altas', AltaController::class);
     Route::resource('actividades', ActividadController::class);
 
+    Route::get('PAT', [VehiculoController::class, 'indexPAT'])->name('vehiculos.indexPAT');
+    Route::get('vehiculos/agregarPAT/{id}', [VehiculoController::class, 'agregarPAT'])->name('vehiculos.agregarPAT');
+    Route::get('vehiculos/borrarPAT/{id}', [VehiculoController::class, 'borrarPAT'])->name('vehiculos.borrarPAT');
+    Route::get('vehiculos/borrarPAT2/{id}', [VehiculoController::class, 'borrarPAT2'])->name('vehiculos.borrarPAT2');
+    Route::get('vehiculos/verPAT/{id}', [VehiculoController::class, 'verPAT'])->name('vehiculos.verPAT');
+    Route::post('vehiculos/agregarProceso', [VehiculoController::class, 'agregarProceso'])->name('vehiculos.agregarProceso');
+    Route::delete('vehiculos/borrarProceso/{id}', [VehiculoController::class, 'borrarProceso'])->name('vehiculos.borrarProceso');
+    Route::post('vehiculos/agregarEtapa', [VehiculoController::class, 'agregarEtapa'])->name('vehiculos.agregarEtapa');
+    Route::delete('vehiculos/borrarEtapa/{id}/{vehiculo_id}', [VehiculoController::class, 'borrarEtapa'])->name('vehiculos.borrarEtapa');
+
     // Route::get('traslados/create', [TrasladoController::class, 'create'])->name('traslados.create');
     // Route::get('traslados/create', function () { $sucursales = App\Models\Sucursal::where('nombre', 'not like', "Todas")->get(); return view('traslados.crear',['sucursales' => $sucursales]); });
     Route::get('traslados/create/{id}', function ($id) { $vehiculos = App\Models\Vehiculo::where('sucursal_id',$id)->get(); return response()->json($vehiculos); });
@@ -64,10 +74,18 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::delete('actividades/asignacion/{id}/{actividad_id}', [ActividadController::class, 'asignacionDestroy'])->name('actividades.asignacion.destroy');
     // Route::post('actividades/asignacion/{id}', [ActividadController::class, 'asignacionUpdate'])->name('actividades.asignacion.update');
+
     Route::get('reporteVehiculoDia', [ReporteController::class, 'vehiculoDia'])->name('reporteVehiculoDia');
     Route::post('reporteVD', [ReporteController::class, 'reporteVehiculoDia'])->name('reporteVD');
+    Route::get('reportes/vehiculos/{fecha}', [ReporteController::class, 'pdfVehiculoDia'])->name('pdf.vehiculosDia');
+
     Route::get('reporteVehiculoActividad', [ReporteController::class, 'vehiculoActividad'])->name('reporteVehiculoActividad');
     Route::post('reporteVA', [ReporteController::class, 'reporteVehiculoActividad'])->name('reporteVA');
+    Route::get('reportes/actividades/{fecha}/{vehiculo}', [ReporteController::class, 'pdfVehiculoActividad'])->name('pdf.vehiculoActividad');
+
     Route::get('reporteTecnico', [ReporteController::class, 'tecnico'])->name('reporteTecnico');
     Route::post('reporteT', [ReporteController::class, 'reporteTecnico'])->name('reporteT');
+
+    Route::get('reportePAT', [ReporteController::class, 'reportePAT'])->name('reportePAT');
+    Route::get('reportes/PAT', [ReporteController::class, 'pdfPAT'])->name('pdf.PAT');
 });

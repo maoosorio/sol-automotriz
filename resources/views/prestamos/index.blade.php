@@ -30,6 +30,7 @@
                                 <thead>
                                     <th>Nombre</th>
                                     <th>Monto</th>
+                                    <th>Tipo</th>
                                     <th>Estado</th>
                                     @if (auth()->user()->sucursal_id == 1)
                                         <th>
@@ -43,6 +44,7 @@
                                         <tr>
                                             <td>{{ $prestamo->tecnico->nombre }}</td>
                                             <td>{{ $prestamo->monto }}</td>
+                                            <td>{{ $prestamo->tipo }}</td>
                                             <td>
                                                 @php
                                                 if($prestamo->estado == 0){

@@ -4,7 +4,7 @@
 <section class="section">
   <div class="section-header">
       <div class="row">
-          <h3 class="page__heading col-4">Vehículos</h3>
+          <h3 class="page__heading col-4">Vehículos en el PAT</h3>
         <div class="col-4"></div>
         <div class="col-4">
             @php
@@ -21,10 +21,10 @@
               <div class="col-lg-12">
                   <div class="card">
                       <div class="card-body">
-
+{{--
                         @can('3.1 crear-vehiculo')
                           <a class="btn btn-success mb-2" href="{{ route('vehiculos.create') }}" data-widget="collapse" data-toggle="tooltip" title="3.1 Crear Vehículo"><i class="fas fa-plus"></i></a>
-                          @endcan
+                          @endcan --}}
 
                             <table id="vehiculos" class="table table-responsive-sm table-striped table-bordered mt-2">
                               <thead>
@@ -52,29 +52,22 @@
                                                 @endif
                                     <td>{{ $vehiculo->referencia }}</td>
                                     <td>
-                                      @can('3.2 editar-vehiculo')
+                                      {{-- @can('3.2 editar-vehiculo')
                                       <a class="btn btn-warning" href="{{ route('vehiculos.edit',$vehiculo->id) }}" data-widget="collapse" data-toggle="tooltip" title="3.2 Editar Vehículo"><i class="fas fa-edit"></i></a>
-                                      @endcan
+                                      @endcan --}}
 
-                                      @can('3.3 borrar-vehiculo')
+                                      {{-- @can('3.3 borrar-vehiculo')
                                       {!! Form::open(['method' => 'DELETE','route' => ['vehiculos.destroy', $vehiculo->id],'style'=>'display:inline']) !!}
                                       {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => '3.3 Borrar Vehículo'] )  }}
                                       {!! Form::close() !!}
-                                      @endcan
+                                      @endcan --}}
 
-                                      @if ( $vehiculo->asesoria_tecnica == null)
-                                      @can('3.4 agregar-pat')
-                                      <a class="btn btn-success" href="{{ route('vehiculos.agregarPAT',$vehiculo->id) }}" data-widget="collapse" data-toggle="tooltip" title="3.4 Agregar PAT"><i class="fa fa-plus"></i></a>
-                                      @endcan
-
-                                      @else
                                       @can('3.6 ver-pat')
                                       <a class="btn btn-info" href="{{ route('vehiculos.verPAT',$vehiculo->id) }}" data-widget="collapse" data-toggle="tooltip" title="3.6 Ver PAT"><i class="fa fa-comments"></i></a>
                                       @endcan
                                       @can('3.5 borrar-pat')
-                                      <a class="btn btn-danger" href="{{ route('vehiculos.borrarPAT',$vehiculo->id) }}" data-widget="collapse" data-toggle="tooltip" title="3.5 Borrar PAT"><i class="fa fa-minus"></i></a>
+                                      <a class="btn btn-danger" href="{{ route('vehiculos.borrarPAT2',$vehiculo->id) }}" data-widget="collapse" data-toggle="tooltip" title="3.5 Borrar PAT"><i class="fa fa-minus"></i></a>
                                       @endcan
-                                      @endif
                                     </td>
                                   </tr>
                                 @endforeach

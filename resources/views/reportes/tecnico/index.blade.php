@@ -44,7 +44,7 @@
                                     $ayer = strtotime('-15 day', strtotime($hoy));
                                     $ayer = date('Y-m-d', $ayer);
                                     @endphp
-                                    <input type="date" class="form-control" name="fecha_inicio"value="{{ $hoy }}" max="{{ $hoy }}">
+                                    <input type="date" class="form-control" name="fecha_inicio" value="{{ $hoy }}" max="{{ $hoy }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="fecha_final">Fecha Final</label>

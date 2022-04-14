@@ -7,6 +7,7 @@ use App\Models\Actividad_Tecnico;
 use App\Models\Vehiculo;
 use App\Models\Tecnico;
 use App\Models\Horario;
+use PDF;
 
 
 class ReporteController extends Controller
@@ -44,20 +45,90 @@ class ReporteController extends Controller
         return view('reportes.vehiculo.reporteDia',compact('listaVehiculos','listaActividades','fecha_inicio','horarios','vehiculos'));
     }
 
+    public function pdfVehiculoDia(Request $request, $fecha)
+    {
+        // $this->validate($request, [
+        //     'fecha_inicio' => 'required',
+        // ]);
+        // $fecha_inicio = $request->post('fecha_inicio');
+
+        $horarios = Horario::get();
+        $vehiculos = Vehiculo::get();
+        $listaVehiculos = Actividad_Tecnico::listaVehiculos($fecha);
+        $listaActividades = Actividad_Tecnico::listaActividades($fecha);
+
+        $pdf = PDF::loadView('reportes.vehiculo.pdfDia',['horarios'=>$horarios,'vehiculos'=>$vehiculos,'listaVehiculos'=>$listaVehiculos,'listaActividades'=>$listaActividades,'fecha'=>$fecha]);
+        return $pdf->download('ReporteVehiculosActividadesDia'.$fecha.'.pdf');
+        // return view('reportes.vehiculo.pdfDia',compact('listaVehiculos','listaActividades','fecha','horarios','vehiculos'));
+    }
+
     public function reporteVehiculoActividad(Request $request)
     {
         $this->validate($request, [
             'fecha_inicio' => 'required',
-            'fecha_final' => 'required',
             'vehiculo_id' => 'required',
         ]);
         $fecha_inicio = $request->post('fecha_inicio');
-        $fecha_final = $request->post('fecha_final');
+        $fecha_final = strtotime('-10 day', strtotime($fecha_inicio));
+        $fecha_final = date('Y-m-d', $fecha_final);
         $vehiculo_id = $request->post('vehiculo_id');
+
+        function fechas($start, $end) {
+            $range = array();
+
+            if (is_string($start) === true) $start = strtotime($start);
+            if (is_string($end) === true ) $end = strtotime($end);
+
+            if ($start > $end) return createDateRangeArray($end, $start);
+
+            do {
+                $range[] = date('Y-m-d', $start);
+                $start = strtotime("+ 1 day", $start);
+            } while($start <= $end);
+
+            return $range;
+        }
+
+        $fechas = fechas($fecha_final,$fecha_inicio);
+
         $horarios = Horario::get();
         $vehiculo = Vehiculo::find($vehiculo_id);
         $lista = Actividad_Tecnico::listaVehiculo($fecha_inicio, $fecha_final, $vehiculo_id);
-        return view('reportes.vehiculo.reporteActividad',compact('lista','fecha_inicio','fecha_final','horarios','vehiculo'));
+        // dd($horarios);
+        // die();
+        return view('reportes.vehiculo.reporteActividad',compact('lista','fecha_inicio','fecha_final','horarios','vehiculo','fechas'));
+    }
+
+    public function pdfVehiculoActividad(Request $request, $fecha, $vehiculo)
+    {
+        $fecha_final = strtotime('-10 day', strtotime($fecha));
+        $fecha_final = date('Y-m-d', $fecha_final);
+
+        function fechas($start, $end) {
+            $range = array();
+
+            if (is_string($start) === true) $start = strtotime($start);
+            if (is_string($end) === true ) $end = strtotime($end);
+
+            if ($start > $end) return createDateRangeArray($end, $start);
+
+            do {
+                $range[] = date('Y-m-d', $start);
+                $start = strtotime("+ 1 day", $start);
+            } while($start <= $end);
+
+            return $range;
+        }
+
+        $fechas = fechas($fecha_final,$fecha);
+
+        $horarios = Horario::get();
+        $vehiculo = Vehiculo::find($vehiculo);
+        $lista = Actividad_Tecnico::listaVehiculo($fecha, $fecha_final, $vehiculo->id);
+
+        $pdf = PDF::loadView('reportes.vehiculo.pdfActividad',['vehiculo'=>$vehiculo,'lista'=>$lista,'fechas'=>$fechas,'horarios'=>$horarios])->setPaper('letter', 'landscape');
+        return $pdf->download('Reporte '.$fecha.'-'.$vehiculo->vehiculo.'.pdf');
+        // return view('reportes.vehiculo.pdfDia',compact('listaVehiculos','listaActividades','fecha','horarios','vehiculos'));
     }
 
     public function tecnico()
@@ -80,6 +151,37 @@ class ReporteController extends Controller
         $tecnico = Tecnico::find($tecnico_id);
         $lista = Actividad_Tecnico::listaTecnico($fecha_inicio, $fecha_final, $tecnico_id);
         return view('reportes.tecnico.reporte',compact('lista','fecha_inicio','fecha_final','horarios','tecnico'));
+    }
+
+    public function reportePAT()
+    {
+        $vehiculos = Vehiculo::listaEtapa();
+        return view('reportes.pat.index',compact('vehiculos'));
+    }
+
+    public function pdfPAT()
+    {
+        $vehiculos = Vehiculo::listaEtapa();
+
+        $pdf = PDF::loadView('reportes.pat.pdfPAT',['vehiculos'=>$vehiculos]);
+        return $pdf->download('ReportePAT.pdf');
+        // return view('reportes.vehiculo.pdfDia',compact('listaVehiculos','listaActividades','fecha','horarios','vehiculos'));
+    }
+
+    public function rPAT(Request $request)
+    {
+        // $this->validate($request, [
+        //     'fecha_inicio' => 'required',
+        //     'fecha_final' => 'required',
+        //     'tecnico_id' => 'required',
+        // ]);
+        // $fecha_inicio = $request->post('fecha_inicio');
+        // $fecha_final = $request->post('fecha_final');
+        // $tecnico_id = $request->post('tecnico_id');
+        // $horarios = Horario::get();
+        // $tecnico = Tecnico::find($tecnico_id);
+        // $lista = Actividad_Tecnico::listaTecnico($fecha_inicio, $fecha_final, $tecnico_id);
+        // return view('reportes.tecnico.reporte',compact('lista','fecha_inicio','fecha_final','horarios','tecnico'));
     }
 
 }

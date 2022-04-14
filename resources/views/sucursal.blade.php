@@ -15,7 +15,7 @@ session()->forget('sucursal_id');
                         <div class="card-body">
                             <div class="row">
 
-                                <div class="col-md-12 col-xl-12 col-12">
+                                <div class="col-sm-12 col-xs-12 col-12 col-lg-12 col-md-12">
                                     <div class="card">
                                         <div class="card-header">
                                             {!! Form::model($user, ['method' => 'PATCH','route' => ['sucursal.asociar', $user->id]]) !!}
@@ -23,8 +23,8 @@ session()->forget('sucursal_id');
 
                                             @foreach ($sucursales->sucursal as $sucursal)
                                                 <div class="form-check row">
-                                                <label class="form-check-label col-2">{{ $sucursal->nombre }}</label>
-                                                <input class="form-check-input col-10" type="radio" name="sucursal_id" value="{{ $sucursal->id }}">
+                                                <label class="form-check-label col-6">{{ $sucursal->nombre }}</label>
+                                                <input class="form-check-input col-4" type="radio" name="sucursal_id" value="{{ $sucursal->id }}">
                                                 </div>
                                             @endforeach
 

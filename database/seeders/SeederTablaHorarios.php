@@ -57,7 +57,6 @@ class SeederTablaHorarios extends Seeder
             '18:16-18:30',
             '18:31-18:45',
             '18:46-19:00',
-            '18:30-19:00',
         ];
 
         foreach($horas as $hora) {

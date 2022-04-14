@@ -413,7 +413,7 @@ return [
                             'can'   => '8.1 ver-rv',
                         ],
                         [
-                            'text'  => '8.1.2 Sin Actividad',
+                            'text'  => '8.1.2 Vehículo en Rango de Fechas',
                             'icon'  => 'fa fa-fw fa-car',
                             'url'   => 'reporteVehiculoActividad',
                             'can'   => '8.1 ver-rv',
@@ -444,9 +444,19 @@ return [
                     'url'   => 'reporteTraslado',
                     'can'   => '8.5 ver-rm',
                 ],
+                [
+                    'text'  => '8.6 Asesoría Técnica',
+                    'icon'  => 'fa fa-fw fa-truck',
+                    'url'   => 'reportePAT',
+                    'can'   => '8.6 ver-rpat',
+                ],
 
             ],
         ],
+        [   'text' => '9 Asesoría Técnica',
+            'url'   => 'PAT',
+            'icon'  => 'fa fa-fw fa-car',
+            'can'   => '9 ver-pat'],
         // ['text' => '9 Cambiar de Sucursal',
         // 'url'   => 'sucursal',
         // 'icon'  => 'fa fa-fw fa-random',

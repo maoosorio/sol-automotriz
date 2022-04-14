@@ -18,6 +18,7 @@ class CreatePrestamosTable extends Migration
             $table->foreignId('tecnico_id')->constrained('tecnicos');
             $table->decimal('monto', $precision = 8, $scale = 2);
             $table->integer('pagos');
+            $table->string('tipo');
             $table->boolean('estado')->nullable($value = true);
             $table->timestamps();
         });

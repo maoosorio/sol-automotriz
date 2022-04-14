@@ -4,7 +4,7 @@
     <section class="section">
         <div class="section-header">
             <div class="row">
-                <h3 class="page__heading col-4">Destajo por Vehículo</h3>
+                <h3 class="page__heading col-4">Reporte de Vehículo</h3>
                 <div class="col-4"></div>
                 <div class="col-4">
                     @php
@@ -34,30 +34,30 @@
                             </div>
                         @endif
 
-                            {!! Form::open(array('route' => 'reporteVD','method'=>'POST')) !!}
+                            {!! Form::open(array('route' => 'reporteVA','method'=>'POST')) !!}
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="fecha_inicio">Fecha Inicio</label>
                                     @php
                                     $hoy = date('Y-m-d');
-                                    $ayer = strtotime('-7 day', strtotime($hoy));
-                                    $ayer = date('Y-m-d', $ayer);
+                                    // $ayer = strtotime('-7 day', strtotime($hoy));
+                                    // $ayer = date('Y-m-d', $ayer);
                                     @endphp
-                                    <input type="date" class="form-control" name="fecha_inicio"value="{{ $hoy }}" max="{{ $hoy }}">
+                                    <input type="date" class="form-control" name="fecha_inicio" value="{{ $hoy }}" max="{{ $hoy }}">
                                 </div>
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label for="fecha_final">Fecha Final</label>
                                     <input type="date" class="form-control" name="fecha_final" value="{{ $ayer }}" min="{{ $ayer }}" max="{{ $hoy }}">
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="vehiculo_id">Vehículo</label>
-                                    <select name="vehiculo_id" id="vehiculo_id" class="form-control select2bs4 @error('vehiculo_id') is-invalid @enderror">
+                                    <select name="vehiculo_id" id="vehiculo_id" class="form-control select2bs4 @error('vehiculo_id') is-invalid @enderror" data-live-search="true">
                                         <option value="0" disabled="disabled" selected="selected">Selecciona una opción...</option>
                                         @foreach ($vehiculos as $vehiculo)
-                                            <option value="{{$vehiculo->id}}" {{old('vehiculo_id') == $vehiculo->id ? 'selected=selected':''}}>{{$vehiculo->vehiculo}}
+                                            <option value="{{$vehiculo->id}}" {{old('vehiculo_id') == $vehiculo->id ? 'selected=selected':''}}>{{$vehiculo->id}} - {{$vehiculo->vehiculo}} - {{$vehiculo->placas}} - {{$vehiculo->referencia}}
                                             </option>
                                         @endforeach
                                     </select>
@@ -74,4 +74,12 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('js')
+<script>
+    $(document).ready(function() {
+    $('#vehiculo_id').select2();
+});
+</script>
 @endsection

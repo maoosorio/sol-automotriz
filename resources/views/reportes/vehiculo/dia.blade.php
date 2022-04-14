@@ -4,8 +4,7 @@
     <section class="section">
         <div class="section-header">
             <div class="row">
-                <h3 class="page__heading col-4">Reporte de Actividades - Vehículos</h3>
-                <div class="col-4"></div>
+                <h3 class="page__heading col-8">Reporte de Actividades - Vehículos</h3>
                 <div class="col-4">
                     @php
                     use App\Models\Sucursal;
@@ -36,10 +35,13 @@
 
                             {!! Form::open(array('route' => 'reporteVD','method'=>'POST')) !!}
                         <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="col-xs-12 col-sm-12 col-md-12 mb-2">
+                                @php
+                                $hoy = date('Y-m-d');
+                                @endphp
                                 <div class="form-group">
                                     <label for="fecha_inicio">Fecha</label>
-                                    <input type="date" class="form-control" name="fecha_inicio">
+                                    <input type="date" class="form-control" name="fecha_inicio" value="{{ $hoy }}" max="{{ $hoy }}"">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12">

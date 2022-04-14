@@ -52,7 +52,7 @@ class Actividad_Tecnico extends Model
                                     a.valor_monetario,
                                     a.vmos,
                                     a.vmes,
-                                    v.estado
+                                    v.estado,
                                     h.hora AS hora,
                                     v.vehiculo AS vehiculo,
                                     t.nombre AS nombre,
