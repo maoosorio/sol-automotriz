@@ -108,6 +108,8 @@ class SeederTablaPermisos extends Seeder
             '9 ver-pat',
             '8.6 ver-rpat',
 
+            '6.3 agregar-pago',
+
         ];
 
         foreach($permisos as $permiso) {

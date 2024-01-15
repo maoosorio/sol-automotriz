@@ -7,6 +7,7 @@ use App\Models\Actividad_Tecnico;
 use App\Models\Vehiculo;
 use App\Models\Tecnico;
 use App\Models\Horario;
+use App\Models\Prestamo;
 use PDF;
 
 
@@ -182,6 +183,19 @@ class ReporteController extends Controller
         // $tecnico = Tecnico::find($tecnico_id);
         // $lista = Actividad_Tecnico::listaTecnico($fecha_inicio, $fecha_final, $tecnico_id);
         // return view('reportes.tecnico.reporte',compact('lista','fecha_inicio','fecha_final','horarios','tecnico'));
+    }
+
+    public function prestamo()
+    {
+        $prestamos = Prestamo::orderBy('tecnico_id')->get();
+        return view('reportes.prestamo.index', compact('prestamos'));
+    }
+
+    public function pdfPrestamo()
+    {
+        $prestamos = Prestamo::orderBy('tecnico_id')->get();
+        $pdf = PDF::loadView('reportes.prestamo.pdfPrestamo',['prestamos'=>$prestamos]);
+        return $pdf->download('ReportePrestamos.pdf');
     }
 
 }

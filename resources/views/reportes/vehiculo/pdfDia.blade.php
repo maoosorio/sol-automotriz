@@ -8,6 +8,16 @@
     <title>Reporte de Vehículos por Día</title>
     {{-- <link href="{{ public_path('vendor/adminlte/dist/css/adminlte.min.css') }}" rel="stylesheet" type="text/css"> --}}
     <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid;
+        }
 
     </style>
 </head>

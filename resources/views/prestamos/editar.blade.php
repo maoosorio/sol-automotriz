@@ -34,16 +34,32 @@
                             </div>
                         @endif
 
-                        {!! Form::model($prestamo, ['method' => 'PATCH','route' => ['prestamos.update', $prestamo->id]]) !!}
+                        {!! Form::model($prestamo, ['method' => 'PATCH','route' => ['prestamos.update', $prestamo->id], 'class'=>'form-inline']) !!}
                         <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <label for="nombre">Nombre</label>
-                                    {!! Form::text('nombre', null, array('class' => 'form-control')) !!}
+                            @foreach ( $prestamos as $row)
+                                <div class="col-xs-12 col-sm-12 col-md-12 mb-2">
+                                    <div class="form-group">
+                                        {{-- <input class="form-control" type="text" name="id" value="{{ $row->id }}"> --}}
+                                        <label for="pago" class="mr-2">Pago</label>
+                                        {!! Form::text('pago', $row->monto, array('class' => 'form-control mr-2', 'readonly')) !!}
+                                        @if ( $row->estado == 'Pagado')
+                                        <label for="pago" class="text-success">{{ $row->estado }}  {{ $row->fecha }}</label>
+                                        @else
+                                        {{-- <button type="submit" class="btn btn-primary">Pagar</button> --}}
+                                        <input type="radio" name="id" value="{{ $row->id }}">
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            @endforeach
+
+                            <div class="col-xs-12 col-sm-12 col-md-12 mb-2">
+                            @if( $prestamoss == 0)
+                            <a href="{{ route('prestamos.index') }}" class="btn btn-default">Regresar</a>
+                            @else
+                            @can('6.3 agregar-pago')
+                            <button type="submit" class="btn btn-primary" data-widget="collapse" data-toggle="tooltip" title="6.3 Agregar Pago">Pagar</button>
+                            @endcan
+                            @endif
                             </div>
                         </div>
                         {!! Form::close() !!}

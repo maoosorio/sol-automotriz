@@ -27,7 +27,7 @@
                             <div class="row">
 
                                 <div class="col-xs-12 col-sm-12 col-md-12 mb-2">
-                                    <a href="{{  route('pdf.vehiculosDia', $fecha_inicio) }}" class="btn btn-primary">Descargar PDF</a>
+                                    <a href="{{  route('pdf.vehiculosDia', $fecha_inicio) }}" target="blank" class="btn btn-primary">Descargar PDF</a>
                                 </div>
 
                                 <div class="col-xs-12 col-sm-12 col-md-12 mb-2">

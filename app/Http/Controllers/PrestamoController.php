@@ -14,10 +14,10 @@ class PrestamoController extends Controller
 
     function __construct()
     {
-         $this->middleware('permission:6 ver-prestamo|6.1 crear-prestamo|6.2 editar-prestamo|6.3 borrar-prestamo', ['only' => ['index']]);
+         $this->middleware('permission:6 ver-prestamo|6.1 crear-prestamo|6.2 ver-pagos', ['only' => ['index']]);
          $this->middleware('permission:6.1 crear-prestamo', ['only' => ['create','store']]);
-         $this->middleware('permission:6.2 editar-prestamo', ['only' => ['edit','update']]);
-         $this->middleware('permission:6.3 borrar-prestamo', ['only' => ['destroy']]);
+         $this->middleware('permission:6.2 ver-pagos', ['only' => ['edit']]);
+         $this->middleware('permission:6.3 agregar-pago', ['only' => ['update']]);
     }
     /**
      * Display a listing of the resource.
@@ -27,11 +27,11 @@ class PrestamoController extends Controller
     public function index()
     {
         if(auth()->user()->sucursal_id == 1) {
-            $prestamos = Prestamo::where('estado','1')->get();
+            $prestamos = Prestamo::where('estado',1)->get();
             $tecnicos = Tecnico::get();
         }else{
             $sucursal_id = auth()->user()->sucursal_id;
-            $prestamos = Prestamo::where('estado','activo')->get();
+            $prestamos = Prestamo::where('estado',1)->get();
             $tecnicos = Tecnico::where([['sucursal_id', '=', $sucursal_id]])->get();
         }
         $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
@@ -47,10 +47,10 @@ class PrestamoController extends Controller
     {
         $sucursales = Sucursal::where('nombre', 'not like', "Todas")->get();
         if(auth()->user()->sucursal_id == 1) {
-            $tecnicos = Tecnico::get();
+            $tecnicos = Tecnico::listaTecnico();
         }else{
             $sucursal_id = auth()->user()->sucursal_id;
-            $tecnicos = Tecnico::where([['sucursal_id', '=', $sucursal_id]])->get();
+            $tecnicos = Tecnico::listaTecnico();
         }
         // $sucursales = Sucursal::get();
         return view('prestamos.crear',compact('sucursales','tecnicos'));
@@ -69,9 +69,19 @@ class PrestamoController extends Controller
             'monto' => 'required',
             'pagos' => 'required',
             'estado' => 'required',
-            'tipo' => 'required',
+            // 'tipo' => 'required',
         ]);
-        $prestamos = Prestamo::create(['tecnico_id' => $request->input('tecnico_id'),'monto' => $request->input('monto'),'pagos' => $request->input('pagos'),'tipo' => $request->input('tipo'),'estado' => $request->input('estado')]);
+        $prestamos = Prestamo::create(['tecnico_id' => $request->input('tecnico_id'),'monto' => $request->input('monto'),'pagos' => $request->input('pagos'),'estado' => $request->input('estado')]);
+
+        $prestamo_id = $prestamos->id;
+        $prestamo_pago = $prestamos->pagos;
+        $prestamo_monto = $prestamos->monto;
+        $monto = $prestamo_monto / $prestamo_pago;
+        // $prestamo_tipo = $prestamos->tipo;
+
+        for($i = 0; $i < $prestamo_pago; $i++) {
+            $pagos = Prestamo_Tecnico::create(['prestamo_id' => $prestamo_id,'monto' => $monto]);
+        }
 
         $id = auth()->user()->id;
         $accion = 'crear prestamo';
@@ -101,10 +111,13 @@ class PrestamoController extends Controller
     {
         $prestamo = Prestamo::find($id);
 
-
-
         $prestamos = Prestamo_Tecnico::where('prestamo_id',$id)->get();
-        return view('prestamos.editar', compact('prestamo','prestamos'));
+        $prestamoss = Prestamo_Tecnico::where(['prestamo_id'=>$id,'estado'=>null])->count();
+        // $prestamos = Prestamo_Tecnico::where(['prestamo_id'=>$id,'estado'=>null])->count();
+        // dd($prestamos);
+        // die();
+
+        return view('prestamos.editar', compact('prestamo','prestamos','prestamoss'));
     }
 
     /**
@@ -116,7 +129,29 @@ class PrestamoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'id' => 'required',
+        ]);
+
+        $idp = $request->input('id');
+        $hoy = date('Y-m-d');
+        $prestamo = Prestamo_Tecnico::find($idp);
+        $prestamo->estado = 'Pagado';
+        $prestamo->fecha = $hoy;
+        $prestamo->update();
+
+        $prestamos = Prestamo_Tecnico::where(['prestamo_id'=>$id,'estado'=>null])->count();
+        if($prestamos == 0){
+        $prestamop = Prestamo::find($id);
+        $prestamop->estado = 0;
+        $prestamop->update();
+        }
+
+        $id = auth()->user()->id;
+        $accion = 'actualizar pago';
+        $tabla = 'pago';
+        $log = UsuarioLog::create(['usuario_id' => $id, 'accion' => $accion, 'tabla' => $tabla]);
+        return redirect()->route('prestamos.index');
     }
 
     /**

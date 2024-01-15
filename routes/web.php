@@ -83,6 +83,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('reporteVA', [ReporteController::class, 'reporteVehiculoActividad'])->name('reporteVA');
     Route::get('reportes/actividades/{fecha}/{vehiculo}', [ReporteController::class, 'pdfVehiculoActividad'])->name('pdf.vehiculoActividad');
 
+    Route::get('reportePrestamo', [ReporteController::class, 'prestamo'])->name('reportePrestamo');
+    Route::get('reportes/prestamos/', [ReporteController::class, 'pdfPrestamo'])->name('pdf.prestamos');
+
     Route::get('reporteTecnico', [ReporteController::class, 'tecnico'])->name('reporteTecnico');
     Route::post('reporteT', [ReporteController::class, 'reporteTecnico'])->name('reporteT');
 

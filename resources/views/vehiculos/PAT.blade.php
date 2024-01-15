@@ -51,6 +51,7 @@
                                 $proceso = Proceso::where('vehiculo_id', $vehiculo->id)->count();
                                 $procesos = Proceso::where('vehiculo_id', $vehiculo->id)->orderBy('id','desc')->get();
                                 $checar_proceso = Proceso::where('vehiculo_id', $vehiculo->id)->latest('id')->first();
+
                                 if ($proceso == 0) {
                                     $c = 1;
                                 } else {
@@ -63,7 +64,7 @@
                                 <div class="col-xs-12 col-sm-12 col-md-12 mb-2">
                                     <input type="hidden" name="vehiculo_id" value="{{ $vehiculo->id }}">
                                     <input type="hidden" name="proceso" value="{{ $c }}">
-                                    @if ($checar_proceso['estado'] != null || $proceso == 0)
+                                    @if (isset($checar_proceso['estado']) != null || $proceso == 0)
                                         <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="top"
                                             title="3.6.1 Agregar Proceso"><i class="fa fa-plus"></i></button>
                                     @else
@@ -82,14 +83,15 @@
                             @php
                                 $etapa = Etapa::where('proceso_id', $row->id)->count();
                                 $etapas = Etapa::where('proceso_id', $row->id)->get();
-                                $checar_etapa = Etapa::where('proceso_id', $row->id) ->latest('proceso_id')->first();
-                                $checar_etapas = Etapa::where('proceso_id', $row->id) ->latest('id')->first();
+                                $checar_etapa = Etapa::where('proceso_id', $row->id)->latest('proceso_id')->first();
+                                $checar_etapass = Etapa::where('proceso_id', $row->id)->latest('id')->first();
+                                $checar_etapas = Etapa::where('proceso_id', $row->id)->latest('id')->count();
                             if( $proceso > 1){
                                 $i = 1;
                                 if ($etapa == 0) {
                                     $i = $i + 1;
                                 }else{
-                                    $i = $checar_etapas['etapa'] + 1;
+                                    $i = $checar_etapass['etapa'] + 1;
                                 }
 
                             }else{
@@ -100,9 +102,15 @@
                                 }
                             }
                             @endphp
-                                @if ( $checar_etapas['etapa'] == 5)
+                                @if ($checar_etapas == 5 && $proceso == 1)
                                 <p class="text-danger">Ya no es posible agregar más etapas, inicie un nuevo proceso.</p>
-                                @else
+                                @endif
+
+                                @if($checar_etapas == 4 && $proceso > 1)
+                                <p class="text-danger">Ya no es posible agregar más etapas, inicie un nuevo proceso.</p>
+                                @endif
+
+                                @if ($proceso > 1 && $checar_etapas < 4)
                                 @can('3.6.1.1 agregar-etapa')
                                     {!! Form::open(['route' => 'vehiculos.agregarEtapa']) !!}
                                     <div class="col-xs-12 col-sm-12 col-md-12 mb-2">
@@ -121,7 +129,30 @@
                                                 data-placement="top" title="3.6.1.1 Agregar Etapa"><i
                                                     class="fa fa-plus"></i></button>
                                         @endif
+                                    </div>
+                                    {!! Form::close() !!}
+                                @endcan
+                                @endif
 
+                                @if ($proceso == 1 && $checar_etapas < 5)
+                                @can('3.6.1.1 agregar-etapa')
+                                    {!! Form::open(['route' => 'vehiculos.agregarEtapa']) !!}
+                                    <div class="col-xs-12 col-sm-12 col-md-12 mb-2">
+                                        <label for="etapa">Etapa {{ $i }}</label>
+                                        <input type="hidden" name="vehiculo_id" value="{{ $vehiculo->id }}">
+                                        <input type="hidden" name="proceso_id" value="{{ $row->id }}">
+                                        <input type="hidden" name="proceso_padre" value="{{ $row->proceso }}">
+                                        <input type="hidden" name="usuario_id" value="{{ auth()->user()->id }}">
+                                        <input type="hidden" name="etapa" value="{{ $i }}">
+                                        <input class="form-control" type="text" name="valor" placeholder="Agregue sus comentarios aquí">
+                                        @if ($etapas != false || $checar_etapa['estado'] != null)
+                                            <button type="submit" class="btn btn-success mt-2" data-toggle="tooltip" data-placement="top"
+                                                title="3.6.1.1 Agregar Etapa"><i class="fa fa-plus"></i></button>
+                                        @else
+                                            <button type="submit" class="btn btn-success d-none" data-toggle="tooltip"
+                                                data-placement="top" title="3.6.1.1 Agregar Etapa"><i
+                                                    class="fa fa-plus"></i></button>
+                                        @endif
                                     </div>
                                     {!! Form::close() !!}
                                 @endcan

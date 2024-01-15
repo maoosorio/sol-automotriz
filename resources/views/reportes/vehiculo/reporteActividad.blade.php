@@ -26,7 +26,7 @@
                         <div class="card-body">
 
                             <div class="col-xs-12 col-sm-12 col-md-12 mb-2">
-                                <a href="{{  route('pdf.vehiculoActividad', [$fecha_inicio,$vehiculo->id]) }}" class="btn btn-primary">Descargar PDF</a>
+                                <a href="{{  route('pdf.vehiculoActividad', [$fecha_inicio,$vehiculo->id]) }}" target="blank" class="btn btn-primary">Descargar PDF</a>
                             </div>
 
                             <table id="reporte" class="table table-responsive table-fluid table-striped table-bordered mt-2" with-buttons>

@@ -59,7 +59,7 @@
                                     <select name="tecnico_id" id="tecnico_id" class="form-control select2bs4 @error('tecnico_id') is-invalid @enderror" data-live-search="true">
                                         <option value="0" disabled="disabled" selected="selected">Selecciona una opción...</option>
                                         @foreach ($tecnicos as $tecnico)
-                                            <option value="{{$tecnico->id}}" {{old('tecnico_id') == $tecnico->id ? 'selected=selected':''}}>{{$tecnico->nombre}} - {{$tecnico->sucursal->nombre}}
+                                            <option value="{{$tecnico->id}}" {{old('tecnico_id') == $tecnico->id ? 'selected=selected':''}}>{{$tecnico->nombre}}
                                             </option>
                                         @endforeach
                                     </select>
@@ -77,7 +77,7 @@
                                     <input class="form-control" type="number" onkeypress="return ((event.charCode >= 48 && event.charCode <= 57))" name="pagos">
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
+                            {{-- <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <label for="tipo">Tipo</label>
                                     <select name="tipo" id="tipo" class="form-control select2bs4 @error('tipo') is-invalid @enderror">
@@ -87,7 +87,7 @@
                                         <option value="Mensual" selected="selected">Mensual</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>

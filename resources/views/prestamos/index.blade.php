@@ -30,7 +30,7 @@
                                 <thead>
                                     <th>Nombre</th>
                                     <th>Monto</th>
-                                    <th>Tipo</th>
+                                    {{-- <th>Tipo</th> --}}
                                     <th>Estado</th>
                                     @if (auth()->user()->sucursal_id == 1)
                                         <th>
@@ -44,7 +44,7 @@
                                         <tr>
                                             <td>{{ $prestamo->tecnico->nombre }}</td>
                                             <td>{{ $prestamo->monto }}</td>
-                                            <td>{{ $prestamo->tipo }}</td>
+                                            {{-- <td>{{ $prestamo->tipo }}</td> --}}
                                             <td>
                                                 @php
                                                 if($prestamo->estado == 0){
@@ -60,17 +60,19 @@
                                                 </td>
                                                 @endif
                                             <td>
+                                                @if ($prestamo->estado == 1)
                                                 @can('6.2 ver-pagos')
-                                                    <a class="btn btn-primary"
-                                                        href="{{ route('prestamos.edit', $prestamo->id) }}" data-widget="collapse" data-toggle="tooltip" title="6.2 Ver Pagos"><i
-                                                            class="fa fa-money-bill"></i></a>
+                                                <a class="btn btn-primary"
+                                                href="{{ route('prestamos.edit', $prestamo->id) }}" data-widget="collapse" data-toggle="tooltip" title="6.2 Ver Pagos"><i
+                                                class="fa fa-money-bill"></i></a>
                                                 @endcan
+                                                @endif
 
-                                                @can('6.3 borrar-prestamo')
+                                                {{-- @can('6.3 borrar-prestamo')
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['prestamos.destroy', $prestamo->id], 'style' => 'display:inline']) !!}
                                                     {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger', 'data-toggle' => 'tooltip', 'data-placement' => 'top', 'title' => '6.3 Borrar Préstamo']) }}
                                                     {!! Form::close() !!}
-                                                @endcan
+                                                @endcan --}}
                                             </td>
                                         </tr>
                                     @endforeach
